@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Brote - Registro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400..900;1,400..900&amp;family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#755936",
+                    "surface-container": "#eeeee9",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#330f1d",
+                    "on-background": "#1a1c19",
+                    "secondary-container": "#fdd6aa",
+                    "background": "#F8F6F2",
+                    "ai-accent": "#EEF4EA",
+                    "on-error-container": "#93000a",
+                    "primary": "#456343",
+                    "surface-bright": "#fafaf4",
+                    "on-surface": "#1a1c19",
+                    "on-primary-container": "#f7fff1",
+                    "inverse-surface": "#2f312e",
+                    "border": "#E8E3DA",
+                    "surface-secondary": "#F3EFE8",
+                    "text-secondary": "#7B756E",
+                    "on-primary": "#ffffff",
+                    "tertiary-container": "#996677",
+                    "surface-container-highest": "#e3e3de",
+                    "text-main": "#3F3A36",
+                    "on-error": "#ffffff",
+                    "outline-variant": "#c3c8be",
+                    "tertiary-fixed-dim": "#f2b6c9",
+                    "primary-fixed": "#c9ecc2",
+                    "outline": "#737970",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#add0a7",
+                    "surface-variant": "#e3e3de",
+                    "primary-container": "#5d7c5a",
+                    "surface-container-low": "#f4f4ef",
+                    "surface-tint": "#476645",
+                    "surface-dim": "#dadad5",
+                    "on-tertiary-fixed-variant": "#653949",
+                    "mustard": "#D7B65A",
+                    "primary-fixed-dim": "#add0a7",
+                    "terracotta": "#C87C5A",
+                    "on-tertiary-container": "#fffbff",
+                    "on-primary-fixed-variant": "#304e2f",
+                    "on-surface-variant": "#434840",
+                    "tertiary": "#7d4e5e",
+                    "surface": "#FFFCF8",
+                    "surface-container-high": "#e8e8e3",
+                    "on-tertiary": "#ffffff",
+                    "primary-soft": "#A8C29A",
+                    "on-secondary-fixed": "#2a1700",
+                    "on-secondary-container": "#785c38",
+                    "on-primary-fixed": "#042107",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#e5c095",
+                    "inverse-on-surface": "#f1f1ec",
+                    "tertiary-fixed": "#ffd9e3",
+                    "on-secondary-fixed-variant": "#5b4221",
+                    "secondary-fixed": "#ffddb7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xl": "32px",
+                    "xxl": "48px",
+                    "lg": "24px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Literata"],
+                    "caption": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Literata"],
+                    "body-lg": ["Inter"],
+                    "display": ["Fraunces"],
+                    "body": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Literata"],
+                    "heading": ["Fraunces"]
+            },
+            "fontSize": {
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #F8F6F2;
+            color: #3F3A36;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .watercolor-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .glass-card {
+            background: rgba(255, 252, 248, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid #E8E3DA;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(69, 99, 67, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-lg md:p-xl">
+<!-- Decorative Watercolor Background -->
+<div class="watercolor-bg overflow-hidden flex items-start justify-end">
+<div class="absolute -top-12 -right-12 w-96 h-96 opacity-40">
+<img class="w-full h-full object-contain transform rotate-12" data-alt="A delicate, hand-painted watercolor illustration of a soft green botanical branch with small organic leaves, floating gracefully in the corner of a warm cream paper background. The style is light and ethereal, with subtle textures and airy whitespace, perfectly capturing a serene and premium botanical journal aesthetic using shades of sage and moss green." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCYx9xT6c0rX-yzIzgvjrdn0pODO2DLxFMyOtPgssm1ZjBqaUiiTRTQoMedOSxvK2WG_VHbnc4elQdRfjQ42LoKnTQcAxfoDCX4rmCG1hZpr0EcWYROxg4eIC--ZeTmXwjRYt3q17Fsr5k26OEtn4Wj5dI6qWP6B-zKQ-R9DTSQ0IUL_qAxISv8YSiV2C1O-78vtOkQ-rBfmAzpOi1Vkfo5jj9HXODOcuvYNy2hQQU-an2UGOnWHX12Q"/>
+</div>
+<div class="absolute -bottom-24 -left-24 w-[500px] h-[500px] opacity-30">
+<img class="w-full h-full object-contain" data-alt="Soft watercolor textures of olive green and muted sage botanical leaves, layered gently to create a natural, organic framing effect. The illustration is airy and artistic, reminiscent of a high-end botanical diary, with soft edges and transparent color overlaps on a warm off-white linen paper background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7TW3Tw0MqQ3lrl2UAi-wcxoA7WzV3i0Jxc9ShLbV0tyWCj49Q0V8kHEtKaZjbyCTzH5AQHHl6jdH7Dn_gayr9TfnKlZSY4CijwW-skHTZUgzJhfFz1u2KyeI3TEVNb49xkYMUPD1Hi7pDVAmLjRYFVFvtPCyNRBqZVr0YllntZklf_ntG4NXqAXrGpGDBmjyTWYdK_xpsorFhQz3N3Lrcnt74ccoe0cj0EFyQSslkeAO0vgAfo9x18w"/>
+</div>
+</div>
+<main class="w-full max-w-[480px] z-10 animate-fade-in">
+<!-- Brand Identity -->
+<div class="text-center mb-xl">
+<span class="font-heading text-headline-lg text-primary mb-sm block tracking-tight">Brote</span>
+<h1 class="font-display text-display-lg text-text-main mb-sm leading-tight">Crea tu santuario</h1>
+<p class="font-body-md text-text-secondary max-w-[320px] mx-auto">Empieza a escribir la historia de tus plantas hoy mismo.</p>
+</div>
+<!-- Registration Form -->
+<section class="glass-card p-xl rounded-[32px] shadow-sm mb-lg">
+<form class="space-y-md" onsubmit="event.preventDefault();">
+<div>
+<label class="font-label-md text-text-secondary ml-sm mb-xs block" for="name">Nombre completo</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">person</span>
+<input class="w-full bg-surface py-md pl-[48px] pr-md rounded-[20px] border border-border font-body-md text-text-main placeholder:text-outline/50 transition-all" id="name" placeholder="Tu nombre" type="text"/>
+</div>
+</div>
+<div>
+<label class="font-label-md text-text-secondary ml-sm mb-xs block" for="email">Email</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">mail</span>
+<input class="w-full bg-surface py-md pl-[48px] pr-md rounded-[20px] border border-border font-body-md text-text-main placeholder:text-outline/50 transition-all" id="email" placeholder="ejemplo@correo.com" type="email"/>
+</div>
+</div>
+<div>
+<label class="font-label-md text-text-secondary ml-sm mb-xs block" for="password">Contraseña</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">lock</span>
+<input class="w-full bg-surface py-md pl-[48px] pr-md rounded-[20px] border border-border font-body-md text-text-main placeholder:text-outline/50 transition-all" id="password" placeholder="Mínimo 8 caracteres" type="password"/>
+</div>
+</div>
+<!-- Terms -->
+<div class="flex items-center gap-sm pt-xs ml-sm">
+<div class="relative flex items-center">
+<input class="w-5 h-5 rounded-md border-border text-primary focus:ring-primary-soft cursor-pointer transition-colors bg-surface" id="terms" type="checkbox"/>
+</div>
+<label class="font-label-md text-text-secondary cursor-pointer select-none" for="terms">
+                        Acepto los términos y condiciones
+                    </label>
+</div>
+<!-- Submit -->
+<button class="w-full bg-primary text-on-primary py-lg rounded-full font-label-md text-[16px] hover:bg-primary-container active:scale-[0.98] transition-all duration-200 mt-md shadow-md shadow-primary/10" type="submit">
+                    Crear mi cuenta
+                </button>
+</form>
+<!-- Social Registration -->
+<div class="mt-xl">
+<div class="relative flex items-center justify-center mb-lg">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-border"></div>
+</div>
+<span class="relative bg-surface px-md font-label-md text-text-secondary">O regístrate con</span>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<button class="flex items-center justify-center gap-sm bg-surface-secondary border border-border py-md px-md rounded-full font-label-md text-text-main hover:bg-surface-container transition-colors">
+<img alt="Google" class="w-5 h-5 grayscale opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcq8u9jv3yT1RiqOhNmlkOrLBOLRGBhJ72FBS_zi5PnOwUHF3q5nAZGacbHuqJfVeKhHQuGPX2yzuYs_0tN2NI4hnzVFKvr4YfY2Lxu4jhNMK3OBQVXB0nDFC9Bxo-Itb_RMX2HYLb28LHA-branwQFKLL2kN7wvqKzOp5uDfOQ43b06YGgZzLQRONeMfbTjkLqHaQbQrUxfZxf-T9AuJGhIFFwZQaAriR2OEs4hv4c4KymRtEFwvdEw"/>
+                        Google
+                    </button>
+<button class="flex items-center justify-center gap-sm bg-surface-secondary border border-border py-md px-md rounded-full font-label-md text-text-main hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[20px] text-outline">group</span>
+                        Facebook
+                    </button>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="text-center">
+<p class="font-body-md text-text-secondary">
+                ¿Ya tienes cuenta? 
+                <a class="text-primary font-semibold hover:underline ml-xs transition-all decoration-primary/30 underline-offset-4" href="#">Inicia sesión</a>
+</p>
+</footer>
+</main>
+<!-- Simple Micro-interactions -->
+<script>
+        // Simple scale effect for input interaction
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.parentElement.classList.add('scale-[1.01]');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Floating animation for the watercolor elements
+        const bgElements = document.querySelectorAll('.watercolor-bg div');
+        window.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+            
+            bgElements.forEach((el, index) => {
+                const speed = (index + 1) * 20;
+                const x = mouseX * speed;
+                const y = mouseY * speed;
+                el.style.transform = `translate(${x}px, ${y}px) rotate(${index === 0 ? 12 : 0}deg)`;
+            });
+        });
+    </script>
+</body></html>
