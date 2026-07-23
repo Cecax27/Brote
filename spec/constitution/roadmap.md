@@ -17,6 +17,7 @@ What: Everything needed to talk to the database.
 What: Users can create accounts, log in, and reset their password via deep link.
 - [ ] Auth context + provider (session, user, signIn, signUp, signOut, resetPassword)
 - [ ] Supabase Auth listeners (`onAuthStateChange`) for session persistence
+- [ ] Basic components — from mockups, create reusable basic components 
 - [ ] Sign up screen — email, password, confirm password, display name
 - [ ] Log in screen — email + password
 - [ ] Forgot password screen — request reset link
