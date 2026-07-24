@@ -7,36 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.5"
-  }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       journal_entries: {
@@ -116,12 +86,79 @@ export type Database = {
         }
         Relationships: []
       }
+      watering_schedules: {
+        Row: {
+          active: boolean
+          created_at: string
+          frequency_days: number
+          id: string
+          last_watered_at: string | null
+          next_due_at: string
+          notify_time: string
+          plant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          frequency_days: number
+          id?: string
+          last_watered_at?: string | null
+          next_due_at: string
+          notify_time?: string
+          plant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          frequency_days?: number
+          id?: string
+          last_watered_at?: string | null
+          next_due_at?: string
+          notify_time?: string
+          plant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "watering_schedules_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      water_now: {
+        Args: { p_plant_id: string }
+        Returns: {
+          active: boolean
+          created_at: string
+          frequency_days: number
+          id: string
+          last_watered_at: string | null
+          next_due_at: string
+          notify_time: string
+          plant_id: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "watering_schedules"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       journal_entry_type:
@@ -255,9 +292,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       journal_entry_type: [
