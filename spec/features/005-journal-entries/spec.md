@@ -1,6 +1,6 @@
 # 005 - Journal Entries
 
-**Status:** Planning
+**Status:** Done
 
 ## What makes
 

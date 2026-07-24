@@ -51,12 +51,12 @@ What: Users can add, view, edit, and delete their plants. Photos included.
 
 ### 005-journal-entries
 What: Each plant has a chronological logbook of care events.
-- [ ] Add journal entry — type (watering, fertilizing, repotting, pruning, observation), content, optional photo
-- [ ] Journal entry list — grouped by month, rendered on plant detail screen
-- [ ] Journal entry card component
-- [ ] Edit journal entry
-- [ ] Delete journal entry — confirmation dialog
-- [ ] Empty state — "Aún no hay entradas en el diario"
+- [x] Add journal entry — type (watering, fertilizing, repotting, pruning, observation), content, optional photo
+- [x] Journal entry list — grouped by month, rendered on plant detail screen
+- [x] Journal entry card component
+- [x] Edit journal entry
+- [x] Delete journal entry — confirmation dialog
+- [x] Empty state — "Aún no hay entradas en el diario"
 
 ## V0.2 Tools
 
