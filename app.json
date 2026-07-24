@@ -43,6 +43,12 @@
         {
           "enableNotificationResponseListeners": true
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Brote necesita acceso a la camara para medir la luz ambiental."
+        }
       ]
     ],
     "notification": {
