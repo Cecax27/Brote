@@ -36,8 +36,18 @@
       ],
       "expo-font",
       "expo-web-browser",
-      "expo-secure-store"
+      "expo-secure-store",
+      "@react-native-community/datetimepicker",
+      [
+        "expo-notifications",
+        {
+          "enableNotificationResponseListeners": true
+        }
+      ]
     ],
+    "notification": {
+      "iconColor": "#6E8E6A"
+    },
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
