@@ -72,13 +72,13 @@ What: Per-plant watering schedule with calendar view and local notifications.
 
 ### 007-light-tool
 What: Measure ambient light via camera lux estimation and get placement advice.
-- [ ] Camera lux measurement — compute average luminance from a camera frame
-- [ ] Calibration step — user points camera at direct sun, then full shadow, to derive device-relative lux scale
-- [ ] Light reading per plant — record lux value and optionally associate with a plant
-- [ ] Light history per plant — chart or list of past readings
-- [ ] Placement advice — compare reading to the plant species' light need (low / medium / bright / direct)
-- [ ] Light profile field on `plants` — expected light level set during create / edit
-- [ ] Database migration — `light_measurements` table (plant_id?, lux, device_lux, created_at)
+- [x] Camera lux measurement — compute average luminance from a camera frame
+- [x] Calibration step — user points camera at direct sun, then full shadow, to derive device-relative lux scale
+- [x] Light reading per plant — record lux value and optionally associate with a plant
+- [x] Light history per plant — chart or list of past readings
+- [x] Placement advice — compare reading to the plant species' light need (low / medium / bright / direct)
+- [x] Light profile field on `plants` — expected light level set during create / edit
+- [x] Database migration — `light_measurements` table (plant_id?, lux, device_lux, created_at)
 
 ## V0.3 AI
 
