@@ -39,15 +39,15 @@ What: The app looks and feels like Brote. Navigation structure, theme, and the h
 
 ### 004-plant-management
 What: Users can add, view, edit, and delete their plants. Photos included.
-- [ ] Create plant screen — name (required), species, location, photo (camera + gallery), notes
-- [ ] Image picker integration (expo-image-picker)
-- [ ] Plant list — rendered on home screen, sorted by newest first
-- [ ] Plant card component — photo, name, species, quick status
-- [ ] Plant detail screen — full info, photo, quick actions (journal, edit, delete, photo timeline)
-- [ ] Photo timeline view — per-plant photo history grid ("watch them grow")
-- [ ] Edit plant screen — pre-filled form
-- [ ] Delete plant — confirmation dialog, cascades to journal entries
-- [ ] Form validation (Spanish error messages)
+- [x] Create plant screen — name (required), species, location, photo (camera + gallery), notes
+- [x] Image picker integration (expo-image-picker)
+- [x] Plant list — rendered on home screen, sorted by newest first
+- [x] Plant card component — photo, name, species, quick status
+- [x] Plant detail screen — full info, photo, quick actions (journal, edit, delete, photo timeline)
+- [x] Photo timeline view — per-plant photo history grid ("watch them grow")
+- [x] Edit plant screen — pre-filled form
+- [x] Delete plant — confirmation dialog, cascades to journal entries
+- [x] Form validation (Spanish error messages)
 
 ### 005-journal-entries
 What: Each plant has a chronological logbook of care events.
