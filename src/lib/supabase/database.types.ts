@@ -7,6 +7,11 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
   public: {
     Tables: {
       journal_entries: {
@@ -50,10 +55,52 @@ export type Database = {
           },
         ]
       }
+      light_measurements: {
+        Row: {
+          calibrated_lux: number | null
+          created_at: string
+          device_lux: number
+          id: string
+          light_profile: string | null
+          notes: string | null
+          plant_id: string | null
+          user_id: string
+        }
+        Insert: {
+          calibrated_lux?: number | null
+          created_at?: string
+          device_lux: number
+          id?: string
+          light_profile?: string | null
+          notes?: string | null
+          plant_id?: string | null
+          user_id: string
+        }
+        Update: {
+          calibrated_lux?: number | null
+          created_at?: string
+          device_lux?: number
+          id?: string
+          light_profile?: string | null
+          notes?: string | null
+          plant_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "light_measurements_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       plants: {
         Row: {
           created_at: string
           id: string
+          light_profile: string | null
           location: string | null
           name: string
           notes: string | null
@@ -65,6 +112,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          light_profile?: string | null
           location?: string | null
           name: string
           notes?: string | null
@@ -76,6 +124,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          light_profile?: string | null
           location?: string | null
           name?: string
           notes?: string | null
