@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Brote - Monstera Details</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=Literata:opsz,wght@7..72,400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "primary-fixed": "#c9ecc2",
+                "surface-tint": "#476645",
+                "surface-secondary": "#F3EFE8",
+                "inverse-on-surface": "#f1f1ec",
+                "surface": "#FFFCF8",
+                "surface-container-high": "#e8e8e3",
+                "ai-accent": "#EEF4EA",
+                "surface-dim": "#dadad5",
+                "text-main": "#3F3A36",
+                "on-tertiary-fixed": "#330f1d",
+                "on-surface": "#1a1c19",
+                "error": "#ba1a1a",
+                "surface-bright": "#fafaf4",
+                "border": "#E8E3DA",
+                "on-surface-variant": "#434840",
+                "tertiary": "#7d4e5e",
+                "tertiary-fixed": "#ffd9e3",
+                "outline": "#737970",
+                "primary-soft": "#A8C29A",
+                "text-secondary": "#7B756E",
+                "secondary-fixed-dim": "#e5c095",
+                "secondary-fixed": "#ffddb7",
+                "surface-container-lowest": "#ffffff",
+                "surface-variant": "#e3e3de",
+                "secondary-container": "#fdd6aa",
+                "surface-container-highest": "#e3e3de",
+                "on-background": "#1a1c19",
+                "on-error-container": "#93000a",
+                "on-secondary-container": "#785c38",
+                "surface-container-low": "#f4f4ef",
+                "background": "#F8F6F2",
+                "on-error": "#ffffff",
+                "primary": "#456343",
+                "on-secondary-fixed": "#2a1700",
+                "mustard": "#D7B65A",
+                "on-primary": "#ffffff",
+                "on-primary-container": "#f7fff1",
+                "on-tertiary": "#ffffff",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed-variant": "#5b4221",
+                "primary-container": "#5d7c5a",
+                "on-tertiary-container": "#fffbff",
+                "inverse-primary": "#add0a7",
+                "terracotta": "#C87C5A",
+                "inverse-surface": "#2f312e",
+                "tertiary-container": "#996677",
+                "on-primary-fixed-variant": "#304e2f",
+                "outline-variant": "#c3c8be",
+                "surface-container": "#eeeee9",
+                "secondary": "#755936",
+                "tertiary-fixed-dim": "#f2b6c9",
+                "primary-fixed-dim": "#add0a7",
+                "on-tertiary-fixed-variant": "#653949",
+                "on-secondary": "#ffffff",
+                "on-primary-fixed": "#042107"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "xxl": "48",
+                "sm": "8",
+                "xs": "4",
+                "md": "16",
+                "xl": "32",
+                "lg": "24"
+            },
+            "fontFamily": {
+                "body": ["Inter"],
+                "display-lg": ["Literata"],
+                "label-md": ["Inter"],
+                "display": ["Fraunces"],
+                "headline-lg": ["Literata"],
+                "body-lg": ["Inter"],
+                "body-md": ["Inter"],
+                "headline-md": ["Literata"],
+                "heading": ["Fraunces"],
+                "caption": ["Inter"]
+            },
+            "fontSize": {
+                "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "500"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .botanical-mask {
+            mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .journal-texture {
+            background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-text-main font-body journal-texture min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-lg h-16 bg-surface dark:bg-on-surface border-b border-border dark:border-outline-variant flat no shadows">
+<button class="w-10 h-10 flex items-center justify-center text-primary dark:text-primary-fixed hover:bg-surface-secondary dark:hover:bg-surface-container-high transition-colors active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-display text-headline-md text-primary dark:text-primary-fixed">Brote</h1>
+<button class="w-10 h-10 flex items-center justify-center text-primary dark:text-primary-fixed hover:bg-surface-secondary dark:hover:bg-surface-container-high transition-colors active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<main class="max-w-md mx-auto pt-16 px-lg">
+<!-- Header: Plant Photo & Name -->
+<section class="mt-xl flex flex-col items-center text-center">
+<div class="relative w-64 h-64 mb-md">
+<!-- Watercolor Aura effect -->
+<div class="absolute inset-0 bg-primary-fixed opacity-20 rounded-full blur-3xl scale-110"></div>
+<img class="w-full h-full object-contain relative z-10 botanical-mask" data-alt="A professional high-resolution studio photograph of a lush Monstera Deliciosa plant with large, glossy, fenestrated leaves. The plant is in a cream-colored ceramic pot, sitting on a wooden stool against a soft, warm ivory background. The lighting is soft and natural, mimicking morning sunlight through a window, creating a gentle and premium botanical aesthetic consistent with a high-end gardening journal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_jzxl10OrCfW4R4lKgf4OGO62wF0ZWW8qtEO0EhRluVYOa3vzSQoDlmvqHm1eD2vXcSC5rtT9PUQu6GHIxnbV-Ybg2sWQkVTxvNAmXiSAOHehtP7kJuGeWt0XtjuXSmwhS35LF1oHZCgdODcc1Tlf4KI6pF1yqEgS_qaB-n8OQv0eESv6PWLWsI3A9hsDVr2Rbw3mOzhIuDYfzUQbgdE_9bwPKsZHdpxdc5ZqCT9W0rqo-TnYFQ3Ax_Zx_n_lHCQc2hRPWW8aR7J3"/>
+</div>
+<h2 class="font-display text-display-lg text-text-main mt-md">Momo</h2>
+<p class="font-body text-text-secondary italic">Monstera Deliciosa</p>
+</section>
+<!-- Care Schedule Card -->
+<section class="mt-xl">
+<div class="bg-surface p-lg rounded-3xl border border-border shadow-sm">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-heading text-headline-md text-primary">Care Schedule</h3>
+<span class="material-symbols-outlined text-primary-soft">calendar_today</span>
+</div>
+<div class="flex justify-between mb-lg custom-scrollbar overflow-x-auto gap-3">
+<!-- Week view -->
+<div class="flex flex-col items-center p-2 rounded-2xl border border-border bg-surface-bright min-w-[50px]">
+<span class="text-caption text-text-secondary">Mon</span>
+<span class="font-bold">12</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-2xl border border-primary-soft bg-primary-fixed text-on-primary-fixed min-w-[50px]">
+<span class="text-caption">Tue</span>
+<span class="font-bold">13</span>
+<div class="w-1.5 h-1.5 bg-primary rounded-full mt-1"></div>
+</div>
+<div class="flex flex-col items-center p-2 rounded-2xl border border-border bg-surface-bright min-w-[50px]">
+<span class="text-caption text-text-secondary">Wed</span>
+<span class="font-bold">14</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-2xl border border-border bg-surface-bright min-w-[50px]">
+<span class="text-caption text-text-secondary">Thu</span>
+<span class="font-bold">15</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-2xl border border-border bg-surface-bright min-w-[50px]">
+<span class="text-caption text-text-secondary">Fri</span>
+<span class="font-bold">16</span>
+</div>
+</div>
+<div class="flex items-center gap-md p-md bg-ai-accent rounded-2xl">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div class="flex-1">
+<p class="font-label-md text-primary">Next Watering</p>
+<p class="text-body-md text-text-main">Today, before 6 PM</p>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-full text-caption font-bold">Done</button>
+</div>
+</div>
+</section>
+<!-- Quick Actions -->
+<section class="mt-xl flex justify-between gap-md">
+<button class="flex-1 bg-surface-secondary border border-border p-md rounded-2xl flex flex-col items-center gap-xs hover:bg-border transition-colors">
+<span class="material-symbols-outlined text-primary">edit_note</span>
+<span class="text-caption font-medium">Add Note</span>
+</button>
+<button class="flex-1 bg-surface-secondary border border-border p-md rounded-2xl flex flex-col items-center gap-xs hover:bg-border transition-colors">
+<span class="material-symbols-outlined text-primary">add_a_photo</span>
+<span class="text-caption font-medium">Add Photo</span>
+</button>
+<button class="flex-1 bg-primary text-on-primary p-md rounded-2xl flex flex-col items-center gap-xs hover:shadow-lg transition-all">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="text-caption font-medium">Ask Flora</span>
+</button>
+</section>
+<!-- Recent Journal Entries -->
+<section class="mt-xxl">
+<div class="flex justify-between items-end mb-md">
+<h3 class="font-heading text-headline-md">Recent Journal</h3>
+<button class="text-primary text-caption font-medium underline">View Gallery</button>
+</div>
+<div class="space-y-md">
+<div class="bg-surface p-md rounded-3xl border border-border flex gap-md items-start">
+<div class="w-16 h-16 rounded-xl bg-cover bg-center shrink-0" data-alt="A close-up artistic macro photograph of a new Monstera leaf unfurling. The leaf is a bright, vibrant lime green, showcasing delicate textures and natural patterns. Soft sunlight illuminates the translucent leaf from behind, creating a glowing effect. The style is soft-focus and painterly, fitting a botanical diary theme with warm tones and natural light." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCH0t6LsWm1U2XQMwRx8S9y_S1gDn1WIdgGxZFEzOcvlN-QyMl4Qlt6_9iqW36iZSzJj2OvBawgb2Hw7phqj_9aXzN4vLbbnFcatcFgAGc0wOabr91zZUbIoyqABnb_DUAkBaYGW1KQPO2Sngz6p1n9_JcEHjbAn-siWxwhWBPLiP9doHdSmjVKxmMNS2sPu9GUHt41jTnng09sTM6HF-NcygvIFVjcOTygakJJHdj44_tPWL5sBXsOHBAX4MSuaR57wUd24dGdsMdq')"></div>
+<div>
+<p class="text-caption text-text-secondary mb-xs">Sep 12, 2023</p>
+<p class="text-body-md font-medium">New leaf emerging!</p>
+<p class="text-caption text-text-secondary line-clamp-1">Momo is looking so happy today. The new leaf is almost fully open...</p>
+</div>
+</div>
+<div class="bg-surface p-md rounded-3xl border border-border flex gap-md items-start">
+<div class="w-16 h-16 rounded-xl bg-cover bg-center shrink-0" data-alt="A clean, bright photograph of a Monstera plant in a white ceramic pot, placed on a light wood surface. The lighting is diffused and airy, giving a clean and organized feeling. The composition is minimalist, highlighting the healthy green of the plant against the warm paper-white background of the design system." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBp2b5H9NyRwWtQrlp5AF0dUZW0O7Y3Wqe8gKfYMHdPUWsVy4MFm-yO5Cn52vDc7ogGR0D4noDBXydsdj_0egYowXl4LLzGoH1GkcQJ4gcjZzmEooS2Vylfbg6lSigghISwLJlc5TkTWt6KN_KAit6fkJBcwtINn9xIGM8R7H5uM7pOlK0SWHIyv1vvxt7QdyN6tqXLkwdDd5fIXwi4Dro4GKMH7WKkHbjHBPZ_NjeqVVQZH23Z_X36aO5JrRn2g-NWZRfhIhjCDGbs')"></div>
+<div>
+<p class="text-caption text-text-secondary mb-xs">Sep 05, 2023</p>
+<p class="text-body-md font-medium">Monthly checkup</p>
+<p class="text-caption text-text-secondary line-clamp-1">Cleaned all the leaves with a damp cloth. No pests found!</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Tips from Flora -->
+<section class="mt-xxl mb-xl">
+<div class="bg-ai-accent p-lg rounded-3xl relative overflow-hidden">
+<!-- Watercolor flower background element -->
+<div class="absolute -right-8 -top-8 w-32 h-32 opacity-10">
+<span class="material-symbols-outlined text-primary scale-[5]">local_florist</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-sm mb-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<p class="font-bold text-primary tracking-wide text-caption uppercase">Tips from Flora</p>
+</div>
+<p class="text-body-md text-on-surface-variant italic leading-relaxed">
+                        "Monsteras love humidity! Try misting Momo's leaves once a week or placing a small humidifier nearby to keep those large leaves looking their best."
+                    </p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-lg pb-safe pt-sm bg-surface dark:bg-on-surface rounded-t-xl shadow-sm border-t border-border dark:border-outline-variant">
+<a class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-soft active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">local_florist</span>
+<span class="font-label-md text-label-md">My Garden</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-fixed dark:bg-primary-container text-on-primary-fixed dark:text-on-primary-container rounded-full px-4 py-1 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-label-md text-label-md">Flora</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-soft active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">water_drop</span>
+<span class="font-label-md text-label-md">Care</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-soft active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-label-md text-label-md">Journal</span>
+</a>
+</nav>
+<script>
+        // Simple interaction for the "Done" button
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.textContent === 'Done') {
+                    this.textContent = 'Updated';
+                    this.classList.remove('bg-primary');
+                    this.classList.add('bg-primary-soft');
+                    const parent = this.closest('div.bg-ai-accent');
+                    parent.style.opacity = '0.6';
+                    parent.style.transition = 'all 0.5s ease';
+                }
+            });
+        });
+    </script>
+</body></html>

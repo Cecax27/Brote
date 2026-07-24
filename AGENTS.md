@@ -173,7 +173,7 @@ And, months later, when comparing photos: *"How beautiful it's been to watch the
   - `spec.md` — feature requirements.
   - `plan.md` — approach, implementation notes, decisions, risks.
   - `tasks.md` — checklist of work items.
-  - Current feature in progress: `001-forgot-password` (reset password via Supabase Auth, cross web/mobile redirect).
+  - Current feature in progress: `002-authentication` (accounts, log in, log out, forgotten password via `brote://` deep link).
 
 When implementing a feature, check `spec/features/` for an existing spec; if absent, create one following the `NNN-name/` convention before writing code.
 

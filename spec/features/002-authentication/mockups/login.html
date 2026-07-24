@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Brote - Iniciar Sesión</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@100..900&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@100..900&family=Inter:wght@100..900&family=Literata:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#755936",
+                    "surface-container": "#eeeee9",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#330f1d",
+                    "on-background": "#1a1c19",
+                    "secondary-container": "#fdd6aa",
+                    "background": "#F8F6F2",
+                    "ai-accent": "#EEF4EA",
+                    "on-error-container": "#93000a",
+                    "primary": "#456343",
+                    "surface-bright": "#fafaf4",
+                    "on-surface": "#1a1c19",
+                    "on-primary-container": "#f7fff1",
+                    "inverse-surface": "#2f312e",
+                    "border": "#E8E3DA",
+                    "surface-secondary": "#F3EFE8",
+                    "text-secondary": "#7B756E",
+                    "on-primary": "#ffffff",
+                    "tertiary-container": "#996677",
+                    "surface-container-highest": "#e3e3de",
+                    "text-main": "#3F3A36",
+                    "on-error": "#ffffff",
+                    "outline-variant": "#c3c8be",
+                    "tertiary-fixed-dim": "#f2b6c9",
+                    "primary-fixed": "#c9ecc2",
+                    "outline": "#737970",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#add0a7",
+                    "surface-variant": "#e3e3de",
+                    "primary-container": "#5d7c5a",
+                    "surface-dim": "#dadad5",
+                    "on-tertiary-fixed-variant": "#653949",
+                    "mustard": "#D7B65A",
+                    "primary-fixed-dim": "#add0a7",
+                    "terracotta": "#C87C5A",
+                    "on-tertiary-container": "#fffbff",
+                    "on-primary-fixed-variant": "#304e2f",
+                    "on-surface-variant": "#434840",
+                    "tertiary": "#7d4e5e",
+                    "surface": "#FFFCF8",
+                    "surface-container-high": "#e8e8e3",
+                    "on-tertiary": "#ffffff",
+                    "primary-soft": "#A8C29A",
+                    "on-secondary-fixed": "#2a1700",
+                    "on-secondary-container": "#785c38",
+                    "on-primary-fixed": "#042107",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#e5c095",
+                    "inverse-on-surface": "#f1f1ec",
+                    "tertiary-fixed": "#ffd9e3",
+                    "on-secondary-fixed-variant": "#5b4221",
+                    "secondary-fixed": "#ffddb7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "12px",
+                    "2xl": "20px",
+                    "3xl": "28px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xl": "32px",
+                    "xxl": "48px",
+                    "lg": "24px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Literata"],
+                    "caption": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Literata"],
+                    "body-lg": ["Inter"],
+                    "display": ["Fraunces"],
+                    "body": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Literata"],
+                    "heading": ["Fraunces"]
+            },
+            "fontSize": {
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        body {
+            background-color: #F8F6F2;
+            color: #3F3A36;
+        }
+
+        .watercolor-leaf {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            opacity: 0.6;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(69, 99, 67, 0.1);
+        }
+
+        .journal-container {
+            max-width: 480px;
+            width: 100%;
+        }
+
+        .btn-hover {
+            transition: transform 0.15s ease-out, background-color 0.15s ease-out;
+        }
+        
+        .btn-hover:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+<!-- Leaf illustration background element -->
+<div class="watercolor-leaf w-64 h-64 md:w-96 md:h-96">
+<img class="w-full h-full object-contain" data-alt="A delicate, soft watercolor illustration of a single monstera leaf and small ferns in shades of sage green and earthy olive. The style is artistic and ethereal, reminiscent of a high-end botanical journal page, with soft edges that bleed subtly into the warm off-white background. The lighting is bright and airy, like morning light hitting linen paper." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfarHnKqzjfXh8p2sgb8aLIb4E9I2-Qrql3cXP7-Dlk9wMiMmwkTPkTVT7BDqPSk6RMv_-iKH_SyeMxrsXd805Dxl3liMNVgeZ83s6CsD5AViBQylSc88hIJ72o3ZSHM4KEUwNQcxFzlnoIk6x5DYVPKw3-EbPxl9GE7QKwEpm8NnTNH8eFrGvG1ItwYUXNYr_Hr_3yfd9Xjwtcple1Kj-X_rxGFjjl-j5rbU3w2dmsM43NyMh2NMxww"/>
+</div>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex items-center justify-center px-lg py-xxl">
+<div class="journal-container">
+<!-- Branding/Icon (Optional) -->
+<div class="mb-xl text-center md:text-left">
+<span class="material-symbols-outlined text-primary text-4xl mb-md">eco</span>
+</div>
+<!-- Header Section -->
+<header class="mb-xl text-center md:text-left">
+<h1 class="font-display text-display-lg text-text-main mb-sm">
+                    Te extrañábamos
+                </h1>
+<p class="font-body-lg text-text-secondary">
+                    Tus plantas están ansiosas por verte.
+                </p>
+</header>
+<!-- Login Form -->
+<form class="space-y-md" onsubmit="event.preventDefault();">
+<div class="space-y-xs">
+<label class="font-label-md text-text-main ml-xs" for="email">Correo electrónico</label>
+<input class="w-full h-14 px-md bg-surface border border-border rounded-2xl font-body-md text-text-main placeholder:text-outline/50 transition-all" id="email" placeholder="tu@correo.com" type="email"/>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between items-center px-xs">
+<label class="font-label-md text-text-main" for="password">Contraseña</label>
+<a class="font-label-md text-primary hover:underline transition-all" href="#">Olvidé mi contraseña</a>
+</div>
+<input class="w-full h-14 px-md bg-surface border border-border rounded-2xl font-body-md text-text-main placeholder:text-outline/50 transition-all" id="password" placeholder="••••••••" type="password"/>
+</div>
+<div class="pt-sm">
+<button class="w-full h-14 bg-primary text-on-primary rounded-3xl font-label-md text-lg btn-hover shadow-sm" type="submit">
+                        Entrar al jardín
+                    </button>
+</div>
+</form>
+<!-- Divider -->
+<div class="relative my-xl">
+<div aria-hidden="true" class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-border"></div>
+</div>
+<div class="relative flex justify-center text-sm">
+<span class="px-md bg-background text-text-secondary font-label-md uppercase tracking-wider">O continúa con</span>
+</div>
+</div>
+<!-- Social Login Buttons -->
+<div class="grid grid-cols-2 gap-md">
+<button class="flex items-center justify-center gap-sm h-14 border border-border rounded-2xl bg-surface hover:bg-surface-secondary transition-colors btn-hover font-label-md text-text-main">
+<img alt="Google" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-tDo7XKcEOENzwGQP6xDxuvcXVcRmUt9Dw2OttVMYaGOvW6dklATh_WB9xDtsOAS1XV2Qd1j4Kl94IWQBRTAvpKJ8zLCvZsDGnQKE_oHuIhSm_fEz8yqMIzJ-UXwX1nrHxNHK4AAoUc6cKkQM1QnT3HWp1ZwqN5FWucbRvArx8xh6z7bmRK3FmkI9ufnVj_REoz-JX0n8SdY3iCTL5lPb84RNSFhCRHWQI9wkcu_i-g8KZfWX47wsKQ"/>
+<span>Google</span>
+</button>
+<button class="flex items-center justify-center gap-sm h-14 border border-border rounded-2xl bg-surface hover:bg-surface-secondary transition-colors btn-hover font-label-md text-text-main">
+<svg class="w-5 h-5 fill-[#1877F2]" viewbox="0 0 24 24">
+<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
+</svg>
+<span>Facebook</span>
+</button>
+</div>
+<!-- Footer Link -->
+<footer class="mt-xl text-center">
+<p class="font-body-md text-text-secondary">
+                    ¿Eres nuevo aquí? 
+                    <a class="text-primary font-bold ml-xs hover:underline transition-all" href="#">Regístrate</a>
+</p>
+</footer>
+</div>
+</main>
+<!-- Micro-interaction script -->
+<script>
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.querySelector('label').style.color = '#456343';
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.querySelector('label').style.color = '#3F3A36';
+            });
+        });
+
+        // Simple form validation visual cue
+        const loginBtn = document.querySelector('button[type="submit"]');
+        loginBtn.addEventListener('click', (e) => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            
+            if(!email || !pass) {
+                loginBtn.classList.add('bg-error');
+                loginBtn.innerText = 'Por favor, completa los campos';
+                setTimeout(() => {
+                    loginBtn.classList.remove('bg-error');
+                    loginBtn.innerText = 'Entrar al jardín';
+                }, 2000);
+            }
+        });
+    </script>
+</body></html>
