@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { ScrollView, Text, View, Alert, StyleSheet, Pressable } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { useTheme } from "@/theme";
-import { Card } from "@/components/Card";
 import { EmptyState } from "@/components/EmptyState";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { Button } from "@/components/Button";
@@ -36,7 +35,7 @@ function formatDate(iso: string): string {
 
 export default function LightHistoryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { colors, spacing, type, radii } = useTheme();
+  const { colors, spacing, type, radii, shadows } = useTheme();
 
   const [measurements, setMeasurements] = useState<LightMeasurement[]>([]);
   const [plant, setPlant] = useState<Plant | null>(null);
@@ -165,7 +164,7 @@ export default function LightHistoryScreen() {
                   {
                     backgroundColor: colors.surface,
                     borderRadius: radii.card,
-                    ...colors.shadows?.soft ?? {},
+                    ...shadows.soft,
                   },
                 ]}
               >

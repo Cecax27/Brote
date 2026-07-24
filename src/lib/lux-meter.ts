@@ -205,7 +205,6 @@ export function decodeLuminanceFromJPEG(base64: string): number {
       // SOF0
       offset += 2;
       const frameLength = readUint16(bytes, offset);
-      const precision = bytes[offset + 2];
       height = readUint16(bytes, offset + 3);
       width = readUint16(bytes, offset + 5);
       numComponents = bytes[offset + 7];

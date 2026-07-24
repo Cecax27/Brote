@@ -77,11 +77,8 @@ export default function LightMeterScreen() {
           ...(params.plantId ? { plantId: params.plantId } : {}),
         },
       } as never);
-    } catch (e) {
-      const msg =
-        e instanceof Error
-          ? e.message
-          : "No se pudo medir la luz. Inténtalo de nuevo.";
+    } catch {
+      const msg = "No se pudo medir la luz. Inténtalo de nuevo.";
       setError(msg);
     } finally {
       setIsMeasuring(false);
@@ -95,7 +92,7 @@ export default function LightMeterScreen() {
       const raw = await captureLuminance();
       setCalBright(raw);
       setCalStep("step2");
-    } catch (e) {
+    } catch {
       setError("No se pudo medir. Inténtalo de nuevo.");
     } finally {
       setIsMeasuring(false);
@@ -116,7 +113,7 @@ export default function LightMeterScreen() {
       setCalStep("idle");
       setCalBright(null);
       Alert.alert("Calibración guardada", "Ya puedes medir la luz con precisión.");
-    } catch (e) {
+    } catch {
       setError("No se pudo guardar la calibración. Inténtalo de nuevo.");
     } finally {
       setIsMeasuring(false);

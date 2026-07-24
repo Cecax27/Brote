@@ -11,7 +11,6 @@ import { useAuth } from "@/context/auth";
 import { useTheme } from "@/theme";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
-import { Illustration } from "@/components/Illustration";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { createLightMeasurement } from "@/lib/supabase/light-measurements";
 import { fetchPlants, fetchPlant } from "@/lib/supabase/plants";
@@ -38,7 +37,7 @@ const ADVICE_COLOR_MAP: Record<string, string> = {
 };
 
 export default function LightResultScreen() {
-  const { colors, spacing, type, radii } = useTheme();
+  const { colors, spacing, type, radii, shadows } = useTheme();
   const router = useRouter();
   const { user } = useAuth();
   const params = useLocalSearchParams<{
@@ -271,7 +270,7 @@ export default function LightResultScreen() {
                 {
                   backgroundColor: colors.surface,
                   borderRadius: radii.card,
-                  ...colors.shadows?.soft ?? {},
+                  ...shadows.soft,
                 },
               ]}
             >
