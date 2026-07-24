@@ -8,9 +8,13 @@ import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { Button } from "@/components/Button";
 import { Illustration } from "@/components/Illustration";
 import { PlantCard } from "@/components/PlantCard";
+import { WateringDueSection } from "@/components/WateringDueSection";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { fetchPlants } from "@/lib/supabase/plants";
+import { fetchDueToday, fetchUpcomingSchedules } from "@/lib/supabase/watering-schedules";
+import { reconcileWateringNotifications } from "@/lib/notifications";
 import type { Plant } from "@/lib/supabase/plants";
+import type { WateringScheduleWithPlant } from "@/lib/supabase/watering-schedules";
 
 function greetingByTime(): string {
   const hour = new Date().getHours();
@@ -23,6 +27,7 @@ export default function HomeScreen() {
   const { user, signOut } = useAuth();
   const { colors, spacing, type } = useTheme();
   const [plants, setPlants] = useState<Plant[]>([]);
+  const [dueToday, setDueToday] = useState<WateringScheduleWithPlant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const displayName = (user?.user_metadata?.display_name as string) || "";
@@ -40,14 +45,26 @@ export default function HomeScreen() {
     }
   }, []);
 
+  const loadDueToday = useCallback(async () => {
+    try {
+      const data = await fetchDueToday();
+      setDueToday(data);
+    } catch {
+      // Silently fail
+    }
+  }, []);
+
   useEffect(() => {
     loadPlants();
-  }, [loadPlants]);
+    loadDueToday();
+  }, [loadPlants, loadDueToday]);
 
   useFocusEffect(
     useCallback(() => {
       loadPlants();
-    }, [loadPlants]),
+      loadDueToday();
+      fetchUpcomingSchedules().then(reconcileWateringNotifications).catch(() => {});
+    }, [loadPlants, loadDueToday]),
   );
 
   const hasPlants = plants.length > 0;
@@ -89,6 +106,8 @@ export default function HomeScreen() {
             name="bell-outline"
             size={24}
             color={colors.text.secondary}
+            onPress={() => router.push("/watering")}
+            suppressHighlighting
           />
         </View>
       </View>
@@ -130,6 +149,13 @@ export default function HomeScreen() {
           Aquí tienes lo que necesita tu atención hoy.
         </Text>
       </View>
+
+      {/* Due today — only visible when there are plants to water */}
+      {hasPlants && (
+        <View style={{ marginTop: spacing.xl }}>
+          <WateringDueSection items={dueToday} />
+        </View>
+      )}
 
       {/* Plant list or empty state */}
       {isLoading ? (

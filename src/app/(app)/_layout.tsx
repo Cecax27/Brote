@@ -63,6 +63,18 @@ export default function AppLayout() {
           title: "Editar entrada",
         }}
       />
+      <Stack.Screen
+        name="plants/[id]/watering"
+        options={{
+          title: "Recordatorio de riego",
+        }}
+      />
+      <Stack.Screen
+        name="watering"
+        options={{
+          title: "Riegos",
+        }}
+      />
     </Stack>
   );
 }

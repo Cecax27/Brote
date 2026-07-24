@@ -13,8 +13,12 @@ import { JournalSection } from "@/components/JournalSection";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { fetchPlant, deletePlant, fetchPlantPhotos } from "@/lib/supabase/plants";
 import { fetchJournalEntries } from "@/lib/supabase/journal-entries";
+import { fetchWateringSchedule, fetchUpcomingSchedules } from "@/lib/supabase/watering-schedules";
+import { reconcileWateringNotifications } from "@/lib/notifications";
+import { WaterNowButton } from "@/components/WaterNowButton";
 import type { Plant } from "@/lib/supabase/plants";
 import type { JournalEntry } from "@/lib/supabase/journal-entries";
+import type { WateringSchedule } from "@/lib/supabase/watering-schedules";
 
 export default function PlantDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -23,6 +27,7 @@ export default function PlantDetailScreen() {
   const [plant, setPlant] = useState<Plant | null>(null);
   const [photos, setPhotos] = useState<string[]>([]);
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
+  const [schedule, setSchedule] = useState<WateringSchedule | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isJournalLoading, setIsJournalLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +50,16 @@ export default function PlantDetailScreen() {
     }
   }, [id]);
 
+  const loadSchedule = useCallback(async () => {
+    if (!id) return;
+    try {
+      const s = await fetchWateringSchedule(id);
+      setSchedule(s);
+    } catch {
+      // Silently fail
+    }
+  }, [id]);
+
   const loadJournal = useCallback(async () => {
     if (!id) return;
     setIsJournalLoading(true);
@@ -61,12 +76,14 @@ export default function PlantDetailScreen() {
   useEffect(() => {
     loadData();
     loadJournal();
-  }, [loadData, loadJournal]);
+    loadSchedule();
+  }, [loadData, loadJournal, loadSchedule]);
 
   useFocusEffect(
     useCallback(() => {
       loadJournal();
-    }, [loadJournal]),
+      loadSchedule();
+    }, [loadJournal, loadSchedule]),
   );
 
   const handleDelete = useCallback(() => {
@@ -240,6 +257,109 @@ export default function PlantDetailScreen() {
         >
           Eliminar
         </Button>
+      </View>
+
+      {/* Riego section */}
+      <View style={{ marginTop: spacing.md }}>
+        <Text
+          style={[
+            styles.sectionTitle,
+            {
+              fontFamily: type.h2.fontFamily,
+              fontSize: type.h2.size,
+              color: colors.text.primary,
+            },
+          ]}
+        >
+          Riego
+        </Text>
+        <View style={{ marginTop: spacing.md }}>
+          {schedule ? (() => {
+            const daysOverdue = Math.max(0, Math.floor(
+              (Date.now() - new Date(schedule.next_due_at).getTime()) / (1000 * 60 * 60 * 24),
+            ));
+            const dueDate = new Date(schedule.next_due_at);
+            const day = dueDate.getDate();
+            const month = [
+              "ene", "feb", "mar", "abr", "may", "jun",
+              "jul", "ago", "sep", "oct", "nov", "dic",
+            ][dueDate.getMonth()];
+            return (
+              <Card>
+                <Text
+                  style={{
+                    fontFamily: type.body.fontFamily,
+                    fontSize: type.body.size,
+                    color: colors.text.primary,
+                  }}
+                >
+                  {daysOverdue > 0
+                    ? `Lleva ${daysOverdue === 1 ? "1 día" : `${daysOverdue} días`}, le toca riego`
+                    : `Próximo riego: ${day} ${month}`}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: type.caption.fontFamily,
+                    fontSize: type.caption.size,
+                    color: colors.text.secondary,
+                    marginTop: 4,
+                  }}
+                >
+                  Cada {schedule.frequency_days} día{schedule.frequency_days !== 1 ? "s" : ""}
+                  {schedule.active ? "" : " (pausado)"}
+                </Text>
+                <View style={{ flexDirection: "row", gap: 12, marginTop: spacing.md }}>
+                  <View style={{ flex: 1 }}>
+                    <WaterNowButton
+                      plant={plant}
+                      onWatered={(s) => {
+                        if (s) setSchedule(s);
+                        loadSchedule();
+                        fetchUpcomingSchedules().then(reconcileWateringNotifications);
+                      }}
+                    />
+                  </View>
+                  <Button
+                    variant="ghost"
+                    onPress={() =>
+                      router.push({
+                        pathname: "/plants/[id]/watering",
+                        params: { id: plant.id },
+                      } as never)
+                    }
+                  >
+                    Editar
+                  </Button>
+                </View>
+              </Card>
+            );
+          })() : (
+            <Card>
+              <Text
+                style={{
+                  fontFamily: type.body.fontFamily,
+                  fontSize: type.body.size,
+                  color: colors.text.primary,
+                }}
+              >
+                ¿Con qué frecuencia riegas a {plant.name}?
+              </Text>
+              <View style={{ marginTop: spacing.md }}>
+                <Button
+                  variant="primary"
+                  onPress={() =>
+                    router.push({
+                      pathname: "/plants/[id]/watering",
+                      params: { id: plant.id },
+                    } as never)
+                  }
+                >
+                  Configurar riego
+                </Button>
+              </View>
+            </Card>
+          )}
+        </View>
       </View>
 
       {/* Photo timeline */}

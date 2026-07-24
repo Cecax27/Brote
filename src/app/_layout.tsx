@@ -1,9 +1,10 @@
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { AuthProvider, useAuth } from "@/context/auth";
 import { ThemeProvider } from "@/theme";
+import { setupNotifications } from "@/lib/notifications";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,6 +28,16 @@ function RootStack() {
       SplashScreen.hide();
     }
   }, [isReady]);
+
+  useEffect(() => {
+    const cleanup = setupNotifications((plantId) => {
+      router.push({
+        pathname: "/plants/[id]",
+        params: { id: plantId },
+      } as never);
+    });
+    return cleanup;
+  }, []);
 
   if (!fontsLoaded && !fontError) {
     return null;
