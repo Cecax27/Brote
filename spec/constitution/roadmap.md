@@ -15,27 +15,27 @@ What: Everything needed to talk to the database.
 
 ### 002-authentication
 What: Users can create accounts, log in, and reset their password via deep link.
-- [ ] Auth context + provider (session, user, signIn, signUp, signOut, resetPassword)
-- [ ] Supabase Auth listeners (`onAuthStateChange`) for session persistence
-- [ ] Basic components — from mockups, create reusable basic components 
-- [ ] Sign up screen — email, password, confirm password, display name
-- [ ] Log in screen — email + password
-- [ ] Forgot password screen — request reset link
-- [ ] Reset password screen — new password via deep link (scheme: `brote`)
-- [ ] Auth guard — redirect unauthenticated users to log in
-- [ ] Logout
-- [ ] Form validation + error messages (Spanish)
+- [x] Auth context + provider (session, user, signIn, signUp, signOut, resetPassword)
+- [x] Supabase Auth listeners (`onAuthStateChange`) for session persistence
+- [x] Basic components — from mockups, create reusable basic components 
+- [x] Sign up screen — email, password, confirm password, display name
+- [x] Log in screen — email + password
+- [x] Forgot password screen — request reset link
+- [x] Reset password screen — new password via deep link (scheme: `brote`)
+- [x] Auth guard — redirect unauthenticated users to log in
+- [x] Logout
+- [x] Form validation + error messages (Spanish)
 
 ### 003-app-foundation
 What: The app looks and feels like Brote. Navigation structure, theme, and the home screen.
-- [ ] Load fonts — `Fraunces` + `Inter` (per visual guide)
-- [ ] Design tokens — colors, spacing, typography scale, border radii, shadows
-- [ ] Root layout with (auth) and (app) route groups
-- [ ] Home screen — greeting, plant summary, "What does my garden need today?"
-- [ ] Plant detail screen (placeholder/scaffold)
-- [ ] Shared UI components — Button, Input, Card, Avatar, EmptyState, LoadingSkeleton
-- [ ] Watercolor illustration placeholders
-- [ ] Loading states and empty states for all screens
+- [x] Load fonts — `Fraunces` + `Inter` (per visual guide)
+- [x] Design tokens — colors, spacing, typography scale, border radii, shadows
+- [x] Root layout with (auth) and (app) route groups
+- [x] Home screen — greeting, plant summary, "What does my garden need today?"
+- [x] Plant detail screen (placeholder/scaffold)
+- [x] Shared UI components — Button, Input, Card, Avatar, EmptyState, LoadingSkeleton
+- [x] Watercolor illustration placeholders
+- [x] Loading states and empty states for all screens
 
 ### 004-plant-management
 What: Users can add, view, edit, and delete their plants. Photos included.

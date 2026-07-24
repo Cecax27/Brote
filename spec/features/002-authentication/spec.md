@@ -1,6 +1,6 @@
 # 002 - Authentication
 
-**Status:** Planning
+**Status:** Done
 
 ## What makes
 

@@ -39,10 +39,10 @@
 - [x] Move `src/app/index.tsx` → `src/app/(app)/index.tsx` (home placeholder)
 - [x] Create `src/app/(app)/_layout.tsx`
 - [x] Create `src/app/(auth)/_layout.tsx`
-- [ ] `src/app/(auth)/login.tsx` — restyle to match `mockups/login.html`
-- [ ] `src/app/(auth)/signup.tsx` — restyle to match `mockups/signup.html`
-- [ ] `src/app/(auth)/forgot-password.tsx` — restyle to match `mockups/forgot-password.html`
-- [ ] `src/app/(auth)/reset-password.tsx` — restyle to match `mockups/reset-password.html`
+- [x] `src/app/(auth)/login.tsx` — restyle to match `mockups/login.html`
+- [x] `src/app/(auth)/signup.tsx` — restyle to match `mockups/signup.html`
+- [x] `src/app/(auth)/forgot-password.tsx` — restyle to match `mockups/forgot-password.html`
+- [x] `src/app/(auth)/reset-password.tsx` — restyle to match `mockups/reset-password.html`
 - [x] Inline `StyleSheet` styling per mockup (no shared component library yet — 003 owns that)
 - [x] Loading state on every submit button (disabled + activity indicator)
 - [x] Client-side validation for all forms (empty, email format, password length ≥ 6, confirm match)
@@ -69,4 +69,4 @@
 
 ## Phase 6 — Roadmap
 
-- [ ] Update `spec/constitution/roadmap.md`: mark `002-authentication` checklist items and feature section as Done
+- [x] Update `spec/constitution/roadmap.md`: mark `002-authentication` checklist items and feature section as Done

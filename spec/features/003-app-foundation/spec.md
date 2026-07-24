@@ -1,6 +1,6 @@
 # 003 - App Foundation
 
-**Status:** Planning
+**Status:** Done
 
 ## What makes
 

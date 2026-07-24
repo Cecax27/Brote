@@ -63,4 +63,4 @@
 
 ## Phase 6 — Roadmap
 
-- [ ] Update `spec/constitution/roadmap.md`: mark `003-app-foundation` checklist items and section as Done
+- [x] Update `spec/constitution/roadmap.md`: mark `003-app-foundation` checklist items and section as Done
