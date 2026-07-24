@@ -19,6 +19,7 @@ export default function EditPlantScreen() {
   const [initialSpecies, setInitialSpecies] = useState("");
   const [initialLocation, setInitialLocation] = useState("");
   const [initialNotes, setInitialNotes] = useState("");
+  const [initialLightProfile, setInitialLightProfile] = useState<string | null>(null);
   const [existingPhotoUrl, setExistingPhotoUrl] = useState<string | null>(null);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +39,7 @@ export default function EditPlantScreen() {
         setInitialSpecies(plant.species ?? "");
         setInitialLocation(plant.location ?? "");
         setInitialNotes(plant.notes ?? "");
+        setInitialLightProfile(plant.light_profile ?? null);
         setExistingPhotoUrl(plant.photo_url);
       })
       .catch((e) => {
@@ -71,6 +73,7 @@ export default function EditPlantScreen() {
           species: data.species || null,
           location: data.location || null,
           notes: data.notes || null,
+          light_profile: data.lightProfile,
         };
 
         if (data.photoUri) {
@@ -135,6 +138,7 @@ export default function EditPlantScreen() {
         species: initialSpecies,
         location: initialLocation,
         notes: initialNotes,
+        lightProfile: initialLightProfile,
       }}
       photoUri={photoUri}
       existingPhotoUrl={existingPhotoUrl}

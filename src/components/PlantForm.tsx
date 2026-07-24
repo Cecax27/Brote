@@ -19,10 +19,13 @@ export type PlantFormData = {
   location: string;
   notes: string;
   photoUri: string | null;
+  lightProfile: string | null;
 };
 
 type Props = {
-  initialData?: Omit<PlantFormData, "photoUri">;
+  initialData?: Omit<PlantFormData, "photoUri" | "lightProfile"> & {
+    lightProfile?: string | null;
+  };
   photoUri: string | null;
   existingPhotoUrl?: string | null;
   onSubmit: (data: PlantFormData) => void | Promise<void>;
@@ -30,6 +33,17 @@ type Props = {
   submitLabel: string;
   onPickPhoto: () => void;
 };
+
+const LIGHT_OPTIONS: readonly {
+  value: string;
+  icon: "weather-sunny-off" | "white-balance-sunny" | "weather-sunny" | "sun-wireless";
+  label: string;
+}[] = [
+  { value: "low", icon: "weather-sunny-off", label: "Sombra" },
+  { value: "medium", icon: "white-balance-sunny", label: "Indirecta" },
+  { value: "bright", icon: "weather-sunny", label: "Brillante" },
+  { value: "direct", icon: "sun-wireless", label: "Directa" },
+];
 
 export function PlantForm({
   initialData,
@@ -46,6 +60,9 @@ export function PlantForm({
   const [species, setSpecies] = useState(initialData?.species ?? "");
   const [location, setLocation] = useState(initialData?.location ?? "");
   const [notes, setNotes] = useState(initialData?.notes ?? "");
+  const [lightProfile, setLightProfile] = useState<string | null>(
+    initialData?.lightProfile ?? null,
+  );
   const [errors, setErrors] = useState<{ name?: string }>({});
 
   const displayPhotoUri = externalPhotoUri;
@@ -70,6 +87,7 @@ export function PlantForm({
       location: location.trim(),
       notes: notes.trim(),
       photoUri: externalPhotoUri,
+      lightProfile,
     });
   };
 
@@ -163,6 +181,59 @@ export function PlantForm({
         editable={!isLoading}
       />
 
+      {/* Light profile picker */}
+      <View style={{ gap: spacing.sm }}>
+        <Text
+          style={{
+            fontFamily: type.caption.fontFamily,
+            fontSize: type.caption.size,
+            color: colors.text.secondary,
+          }}
+        >
+          Nivel de luz ideal
+        </Text>
+        <View style={styles.lightPickerRow}>
+          {LIGHT_OPTIONS.map((opt) => {
+            const isSelected = lightProfile === opt.value;
+            return (
+              <Pressable
+                key={opt.value}
+                onPress={() =>
+                  setLightProfile(isSelected ? null : opt.value)
+                }
+                disabled={isLoading}
+                style={[
+                  styles.lightChip,
+                  {
+                    backgroundColor: isSelected ? colors.primary : colors.muted,
+                    borderRadius: radii.button,
+                    borderWidth: isSelected ? 0 : 1,
+                    borderColor: colors.border,
+                  },
+                ]}
+              >
+                <MaterialCommunityIcons
+                  name={opt.icon}
+                  size={16}
+                  color={isSelected ? colors.background : colors.text.secondary}
+                />
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    fontFamily: type.caption.fontFamily,
+                    fontSize: 11,
+                    color: isSelected ? colors.background : colors.text.secondary,
+                    marginLeft: 4,
+                  }}
+                >
+                  {opt.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
+
       <Input
         label="Notas"
         placeholder="Algo que quieras recordar sobre esta planta…"
@@ -219,5 +290,18 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
+  },
+  lightPickerRow: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  lightChip: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 6,
+    gap: 2,
   },
 });

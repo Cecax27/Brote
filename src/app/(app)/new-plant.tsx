@@ -34,6 +34,7 @@ export default function NewPlantScreen() {
           species: data.species || null,
           location: data.location || null,
           notes: data.notes || null,
+          light_profile: data.lightProfile,
         });
 
         if (data.photoUri) {

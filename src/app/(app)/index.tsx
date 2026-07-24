@@ -103,6 +103,13 @@ export default function HomeScreen() {
             />
           )}
           <MaterialCommunityIcons
+            name="white-balance-sunny"
+            size={24}
+            color={colors.text.secondary}
+            onPress={() => router.push("/light-meter")}
+            suppressHighlighting
+          />
+          <MaterialCommunityIcons
             name="bell-outline"
             size={24}
             color={colors.text.secondary}

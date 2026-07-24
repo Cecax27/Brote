@@ -15,10 +15,13 @@ import { fetchPlant, deletePlant, fetchPlantPhotos } from "@/lib/supabase/plants
 import { fetchJournalEntries } from "@/lib/supabase/journal-entries";
 import { fetchWateringSchedule, fetchUpcomingSchedules } from "@/lib/supabase/watering-schedules";
 import { reconcileWateringNotifications } from "@/lib/notifications";
+import { fetchLatestMeasurement } from "@/lib/supabase/light-measurements";
 import { WaterNowButton } from "@/components/WaterNowButton";
+import { luxCategory, profileLuxRange } from "@/lib/lux-meter";
 import type { Plant } from "@/lib/supabase/plants";
 import type { JournalEntry } from "@/lib/supabase/journal-entries";
 import type { WateringSchedule } from "@/lib/supabase/watering-schedules";
+import type { LightMeasurement } from "@/lib/supabase/light-measurements";
 
 export default function PlantDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -28,6 +31,7 @@ export default function PlantDetailScreen() {
   const [photos, setPhotos] = useState<string[]>([]);
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
   const [schedule, setSchedule] = useState<WateringSchedule | null>(null);
+  const [latestMeasurement, setLatestMeasurement] = useState<LightMeasurement | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isJournalLoading, setIsJournalLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,17 +77,29 @@ export default function PlantDetailScreen() {
     }
   }, [id]);
 
+  const loadLight = useCallback(async () => {
+    if (!id) return;
+    try {
+      const m = await fetchLatestMeasurement(id);
+      setLatestMeasurement(m);
+    } catch {
+      // Silently fail
+    }
+  }, [id]);
+
   useEffect(() => {
     loadData();
     loadJournal();
     loadSchedule();
-  }, [loadData, loadJournal, loadSchedule]);
+    loadLight();
+  }, [loadData, loadJournal, loadSchedule, loadLight]);
 
   useFocusEffect(
     useCallback(() => {
       loadJournal();
       loadSchedule();
-    }, [loadJournal, loadSchedule]),
+      loadLight();
+    }, [loadJournal, loadSchedule, loadLight]),
   );
 
   const handleDelete = useCallback(() => {
@@ -355,6 +371,120 @@ export default function PlantDetailScreen() {
                   }
                 >
                   Configurar riego
+                </Button>
+              </View>
+            </Card>
+          )}
+        </View>
+      </View>
+
+      {/* Luz section */}
+      <View style={{ marginTop: spacing.md }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <Text
+            style={[
+              styles.sectionTitle,
+              {
+                fontFamily: type.h2.fontFamily,
+                fontSize: type.h2.size,
+                color: colors.text.primary,
+              },
+            ]}
+          >
+            Luz
+          </Text>
+          {plant.light_profile && (() => {
+            const range = profileLuxRange(plant.light_profile);
+            return (
+              <Text
+                style={{
+                  fontFamily: type.caption.fontFamily,
+                  fontSize: type.caption.size,
+                  color: colors.primary,
+                }}
+              >
+                — {range?.label ?? plant.light_profile}
+              </Text>
+            );
+          })()}
+        </View>
+        <View style={{ marginTop: spacing.md }}>
+          {latestMeasurement ? (() => {
+            const lux = latestMeasurement.calibrated_lux ?? Math.round(latestMeasurement.device_lux);
+            const cat = luxCategory(lux);
+            const ld = new Date(latestMeasurement.created_at);
+            const month = [
+              "ene", "feb", "mar", "abr", "may", "jun",
+              "jul", "ago", "sep", "oct", "nov", "dic",
+            ][ld.getMonth()];
+            return (
+              <Card>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: type.bodyMedium.fontFamily,
+                        fontSize: type.body.size,
+                        color: colors.text.primary,
+                      }}
+                    >
+                      {lux.toLocaleString()} lux · {cat}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: type.caption.fontFamily,
+                        fontSize: type.caption.size,
+                        color: colors.text.secondary,
+                        marginTop: 2,
+                      }}
+                    >
+                      {ld.getDate()} {month}
+                      {!latestMeasurement.calibrated_lux ? " (sin calibrar)" : ""}
+                    </Text>
+                  </View>
+                  <MaterialCommunityIcons
+                    name="white-balance-sunny"
+                    size={24}
+                    color={colors.primary}
+                  />
+                </View>
+                <View style={{ marginTop: spacing.md }}>
+                  <Button
+                    variant="ghost"
+                    onPress={() =>
+                      router.push({
+                        pathname: "/plants/[id]/light-history",
+                        params: { id: plant.id },
+                      } as never)
+                    }
+                  >
+                    Historial de luz
+                  </Button>
+                </View>
+              </Card>
+            );
+          })() : (
+            <Card>
+              <Text
+                style={{
+                  fontFamily: type.body.fontFamily,
+                  fontSize: type.body.size,
+                  color: colors.text.primary,
+                }}
+              >
+                ¿Cuánta luz recibe {plant.name}?
+              </Text>
+              <View style={{ marginTop: spacing.md }}>
+                <Button
+                  variant="primary"
+                  onPress={() =>
+                    router.push({
+                      pathname: "/light-meter",
+                      params: { plantId: plant.id },
+                    } as never)
+                  }
+                >
+                  Medir luz
                 </Button>
               </View>
             </Card>

@@ -75,6 +75,25 @@ export default function AppLayout() {
           title: "Riegos",
         }}
       />
+      <Stack.Screen
+        name="light-meter"
+        options={{
+          title: "Medir luz",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="light-result"
+        options={{
+          title: "Resultado",
+        }}
+      />
+      <Stack.Screen
+        name="plants/[id]/light-history"
+        options={{
+          title: "Historial de luz",
+        }}
+      />
     </Stack>
   );
 }
