@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { ScrollView, Text, View, Alert, StyleSheet } from "react-native";
 import { Image } from "expo-image";
-import { useLocalSearchParams, router } from "expo-router";
+import { useLocalSearchParams, router, useFocusEffect } from "expo-router";
 import { useTheme } from "@/theme";
 import { Card } from "@/components/Card";
 import { Button } from "@/components/Button";
@@ -9,9 +9,12 @@ import { EmptyState } from "@/components/EmptyState";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { PhotoGrid } from "@/components/PhotoGrid";
 import { Illustration } from "@/components/Illustration";
+import { JournalSection } from "@/components/JournalSection";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { fetchPlant, deletePlant, fetchPlantPhotos } from "@/lib/supabase/plants";
+import { fetchJournalEntries } from "@/lib/supabase/journal-entries";
 import type { Plant } from "@/lib/supabase/plants";
+import type { JournalEntry } from "@/lib/supabase/journal-entries";
 
 export default function PlantDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -19,7 +22,9 @@ export default function PlantDetailScreen() {
 
   const [plant, setPlant] = useState<Plant | null>(null);
   const [photos, setPhotos] = useState<string[]>([]);
+  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isJournalLoading, setIsJournalLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
@@ -40,9 +45,29 @@ export default function PlantDetailScreen() {
     }
   }, [id]);
 
+  const loadJournal = useCallback(async () => {
+    if (!id) return;
+    setIsJournalLoading(true);
+    try {
+      const entries = await fetchJournalEntries(id);
+      setJournalEntries(entries);
+    } catch {
+      // Silently fail — journal section shows empty
+    } finally {
+      setIsJournalLoading(false);
+    }
+  }, [id]);
+
   useEffect(() => {
     loadData();
-  }, [loadData]);
+    loadJournal();
+  }, [loadData, loadJournal]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadJournal();
+    }, [loadJournal]),
+  );
 
   const handleDelete = useCallback(() => {
     Alert.alert("Eliminar planta", "¿Estás seguro? Esta acción no se puede deshacer.", [
@@ -236,12 +261,24 @@ export default function PlantDetailScreen() {
         </View>
       </View>
 
-      {/* Placeholder sections */}
-      <EmptyState
-        illustration="pot"
-        title="Diario"
-        subtitle="Tu registro de cuidados aparecerá aquí. Próximamente."
+      {/* Journal section */}
+      <JournalSection
+        entries={journalEntries}
+        isLoading={isJournalLoading}
+        onAdd={() =>
+          router.push({
+            pathname: "/plants/[id]/new-entry",
+            params: { id: plant.id },
+          })
+        }
+        onEntryPress={(entry) =>
+          router.push({
+            pathname: "/plants/[id]/edit-entry",
+            params: { id: plant.id, entryId: entry.id },
+          } as never)
+        }
       />
+
       <EmptyState
         illustration="flora"
         title="Consulta a Flora"

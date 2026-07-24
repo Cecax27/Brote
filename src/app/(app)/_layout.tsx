@@ -51,6 +51,18 @@ export default function AppLayout() {
           title: "Editar planta",
         }}
       />
+      <Stack.Screen
+        name="plants/[id]/new-entry"
+        options={{
+          title: "Nueva entrada",
+        }}
+      />
+      <Stack.Screen
+        name="plants/[id]/edit-entry"
+        options={{
+          title: "Editar entrada",
+        }}
+      />
     </Stack>
   );
 }
