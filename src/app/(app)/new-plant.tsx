@@ -44,8 +44,11 @@ export default function NewPlantScreen() {
               data.photoUri,
             );
             await updatePlant(plant.id, { photo_url: photoUrl });
-          } catch (uploadError) {
-            console.warn("Failed to upload photo:", uploadError);
+          } catch {
+            Alert.alert(
+              "Error al subir la foto",
+              "La planta se ha creado, pero no hemos podido guardar la foto. Puedes añadirla después editando la planta.",
+            );
           }
         }
 

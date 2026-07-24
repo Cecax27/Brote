@@ -12,11 +12,18 @@ export async function uploadPlantPhoto(
   const path = `${userId}/${plantId}/${timestamp}.${ext}`;
 
   const response = await fetch(uri);
-  const blob = await response.blob();
+  if (!response.ok) {
+    throw new Error(`No se pudo leer la foto (${response.status})`);
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
 
   const { error } = await supabase.storage
     .from(BUCKET)
-    .upload(path, blob, { contentType: blob.type || "image/jpeg", upsert: false });
+    .upload(path, arrayBuffer, {
+      contentType: "image/jpeg",
+      upsert: false,
+    });
 
   if (error) throw error;
 

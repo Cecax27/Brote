@@ -77,8 +77,11 @@ export default function EditPlantScreen() {
           try {
             const photoUrl = await uploadPlantPhoto(user.id, id, data.photoUri);
             updates.photo_url = photoUrl;
-          } catch (uploadError) {
-            console.warn("Failed to upload photo:", uploadError);
+          } catch {
+            Alert.alert(
+              "Error al subir la foto",
+              "Los cambios se han guardado, pero no hemos podido actualizar la foto. Inténtalo de nuevo.",
+            );
           }
         }
 
