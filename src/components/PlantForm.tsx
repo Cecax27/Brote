@@ -1,11 +1,10 @@
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
   Pressable,
   ScrollView,
   StyleSheet,
-  TextStyle,
 } from "react-native";
 import { Image } from "expo-image";
 import { useTheme } from "@/theme";
@@ -23,21 +22,23 @@ export type PlantFormData = {
 };
 
 type Props = {
-  initialData?: PlantFormData;
+  initialData?: Omit<PlantFormData, "photoUri">;
+  photoUri: string | null;
+  existingPhotoUrl?: string | null;
   onSubmit: (data: PlantFormData) => void | Promise<void>;
   isLoading?: boolean;
   submitLabel: string;
   onPickPhoto: () => void;
-  existingPhotoUrl?: string | null;
 };
 
 export function PlantForm({
   initialData,
+  photoUri: externalPhotoUri,
+  existingPhotoUrl,
   onSubmit,
   isLoading = false,
   submitLabel,
   onPickPhoto,
-  existingPhotoUrl,
 }: Props) {
   const { colors, spacing, radii, type } = useTheme();
 
@@ -45,17 +46,10 @@ export function PlantForm({
   const [species, setSpecies] = useState(initialData?.species ?? "");
   const [location, setLocation] = useState(initialData?.location ?? "");
   const [notes, setNotes] = useState(initialData?.notes ?? "");
-  const [photoUri, setPhotoUri] = useState<string | null>(
-    initialData?.photoUri ?? null,
-  );
-  const [hasExistingPhoto, setHasExistingPhoto] = useState(
-    !!existingPhotoUrl && !initialData?.photoUri,
-  );
   const [errors, setErrors] = useState<{ name?: string }>({});
 
-  const displayPhotoUri = photoUri;
-  const hasPhotoToShow =
-    displayPhotoUri || (hasExistingPhoto && existingPhotoUrl);
+  const displayPhotoUri = externalPhotoUri;
+  const hasPhotoToShow = displayPhotoUri || existingPhotoUrl;
 
   const handleSubmit = () => {
     const nextErrors: { name?: string } = {};
@@ -75,7 +69,7 @@ export function PlantForm({
       species: species.trim(),
       location: location.trim(),
       notes: notes.trim(),
-      photoUri,
+      photoUri: externalPhotoUri,
     });
   };
 
@@ -105,7 +99,7 @@ export function PlantForm({
         {hasPhotoToShow ? (
           <Image
             source={{
-              uri: displayPhotoUri || existingPhotoUrl ?? "",
+              uri: displayPhotoUri || (existingPhotoUrl ?? ""),
             }}
             style={[styles.photoPreview, { borderRadius: radii.input }]}
             contentFit="cover"

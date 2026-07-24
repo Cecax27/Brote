@@ -12,7 +12,7 @@ type Props = {
 };
 
 export function PlantCard({ plant, onPress }: Props) {
-  const { colors, spacing, type } = useTheme();
+  const { colors, type } = useTheme();
 
   return (
     <Pressable onPress={() => onPress(plant)}>
