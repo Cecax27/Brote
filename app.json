@@ -17,7 +17,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.bitabit.brote"
     },
     "web": {
       "output": "static",
@@ -27,11 +28,11 @@
       "expo-router",
       [
         "expo-splash-screen",
-      {
-        "backgroundColor": "#F8F6F2",
-        "image": "./assets/images/splash-icon.png",
-        "imageWidth": 76
-      }
+        {
+          "backgroundColor": "#F8F6F2",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 76
+        }
       ],
       "expo-font",
       "expo-web-browser",
@@ -40,6 +41,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b8b598c9-101c-4ad9-851c-dc81ba676eac"
+      }
     }
   }
 }

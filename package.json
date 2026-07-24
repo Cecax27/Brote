@@ -1,13 +1,13 @@
 {
   "name": "brote",
   "main": "expo-router/entry",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
     "@supabase/supabase-js": "^2.110.8",
     "expo": "~54.0.8",
     "expo-constants": "~18.0.13",
-    "expo-device": "~8.0.10",
+    "expo-device": "~8.0.1/0",
     "expo-font": "~14.0.12",
     "expo-glass-effect": "~0.1.10",
     "expo-image": "~3.0.11",
