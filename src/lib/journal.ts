@@ -1,35 +1,40 @@
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import type { JournalEntryType } from "./supabase/journal-entries";
 
-export const JOURNAL_ENTRY_TYPES = {
+export const JOURNAL_ENTRY_TYPES: Record<
+  JournalEntryType,
+  {
+    label: string;
+    icon: keyof typeof MaterialCommunityIcons.glyphMap;
+    color: string;
+  }
+> = {
   watering: {
     label: "Riego",
-    icon: "watering-can-outline" as const,
+    icon: "watering-can-outline",
     color: "#6E8E6A",
   },
   fertilizing: {
     label: "Fertilización",
-    icon: "sprout" as const,
+    icon: "sprout",
     color: "#A8C29A",
   },
   repotting: {
     label: "Trasplante",
-    icon: "flower-tulip-outline" as const,
+    icon: "flower-tulip-outline",
     color: "#C7A47B",
   },
   pruning: {
     label: "Poda",
-    icon: "content-cut" as const,
+    icon: "content-cut",
     color: "#D7B65A",
   },
   observation: {
     label: "Observación",
-    icon: "eye-outline" as const,
+    icon: "eye-outline",
     color: "#7B756E",
   },
-} as const satisfies Record<
-  JournalEntryType,
-  { label: string; icon: string; color: string }
->;
+};
 
 const MONTHS = [
   "enero",
