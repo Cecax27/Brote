@@ -44,7 +44,7 @@ export function WaterNowButton({ plant, onWatered }: Props) {
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading, justWatered, plant.id, onWatered, motion]);
+  }, [isLoading, justWatered, plant.id, onWatered, motion, scale]);
 
   if (error) {
     return (

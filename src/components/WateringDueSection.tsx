@@ -45,14 +45,12 @@ export function WateringDueSection({ items }: Props) {
     <View style={{ gap: 12 }}>
       <View style={styles.header}>
         <Text
-          style={[
-            styles.title,
-            {
-              fontFamily: type.h3.fontFamily,
-              fontSize: type.h3.size,
-              color: colors.text.primary,
-            },
-          ]}
+          style={{
+            fontFamily: type.h3.fontFamily,
+            fontSize: type.h3.size,
+            fontWeight: "600",
+            color: colors.text.primary,
+          }}
         >
           Hoy
         </Text>
@@ -98,35 +96,30 @@ export function WateringDueSection({ items }: Props) {
               </View>
               <View style={styles.info}>
                 <Text
-                  style={[
-                    styles.name,
-                    {
-                      fontFamily: type.bodyMedium.fontFamily,
-                      fontSize: type.bodyMedium.size,
-                      color: colors.text.primary,
-                    },
-                  ]}
+                  style={{
+                    fontFamily: type.bodyMedium.fontFamily,
+                    fontSize: type.bodyMedium.size,
+                    fontWeight: "500",
+                    color: colors.text.primary,
+                  }}
                   numberOfLines={1}
                 >
                   {plant.name}
                 </Text>
                 <View style={styles.statusRow}>
                   <Text
-                    style={[
-                      styles.status,
-                      {
-                        fontFamily: type.caption.fontFamily,
-                        fontSize: type.caption.size,
-                        color: colors.text.secondary,
-                      },
-                    ]}
+                    style={{
+                      fontFamily: type.caption.fontFamily,
+                      fontSize: type.caption.size,
+                      color: colors.text.secondary,
+                    }}
                   >
                     {statusLine(item.next_due_at)} — {formatShortDate(item.next_due_at)}
                   </Text>
                 </View>
               </View>
               <WaterNowButton plant={plant} />
-            </Pressable>
+            </Card>
           </Pressable>
         );
       })}
@@ -139,9 +132,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-  },
-  title: {
-    fontWeight: "600",
   },
   card: {
     flexDirection: "row",
@@ -168,12 +158,8 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 2,
   },
-  name: {
-    fontWeight: "500",
-  },
   statusRow: {
     flexDirection: "row",
     alignItems: "center",
   },
-  status: {},
 });

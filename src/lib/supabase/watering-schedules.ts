@@ -1,5 +1,5 @@
 import { supabase } from "./client";
-import type { Database, Tables, TablesInsert, TablesUpdate } from "./database.types";
+import type { Tables, TablesInsert, TablesUpdate } from "./database.types";
 import type { Plant } from "./plants";
 
 export type WateringSchedule = Tables<"watering_schedules">;
