@@ -62,13 +62,13 @@ What: Each plant has a chronological logbook of care events.
 
 ### 006-watering-schedule
 What: Per-plant watering schedule with calendar view and local notifications.
-- [ ] Database migration — `watering_schedules` table (plant_id FK, frequency_days, last_watered_at, next_due_at, notify_time, active)
-- [ ] Create watering schedule per plant — frequency, reminder time, active toggle
-- [ ] Watering calendar view — upcoming waterings for the week/month
-- [ ] Local scheduled notifications via `expo-notifications` on due dates
-- [ ] "Water now" quick action — logs a watering journal entry and advances next_due_at
-- [ ] Home screen integration — "Plants that need watering today" section
-- [ ] Edit / delete / pause watering schedule
+- [x] Database migration — `watering_schedules` table (plant_id FK, frequency_days, last_watered_at, next_due_at, notify_time, active)
+- [x] Create watering schedule per plant — frequency, reminder time, active toggle
+- [x] Watering calendar view — upcoming waterings for the week/month
+- [x] Local scheduled notifications via `expo-notifications` on due dates
+- [x] "Water now" quick action — logs a watering journal entry and advances next_due_at
+- [x] Home screen integration — "Plants that need watering today" section
+- [x] Edit / delete / pause watering schedule
 
 ### 007-light-tool
 What: Measure ambient light via camera lux estimation and get placement advice.

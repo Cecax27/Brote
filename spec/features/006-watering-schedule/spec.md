@@ -1,6 +1,6 @@
 # 006 - Watering Schedule
 
-**Status:** Planned
+**Status:** Done
 
 ## What makes
 
