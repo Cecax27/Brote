@@ -1,17 +1,16 @@
 import { useState } from "react";
-import {
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { Text, View, StyleSheet, Pressable, Image } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from "@/context/auth";
+import { useTheme } from "@/theme";
+import { Input } from "@/components/Input";
+import { Button } from "@/components/Button";
+
+const logo = require("@/assets/images/logo.png");
 
 export default function ForgotPasswordScreen() {
   const { resetPassword } = useAuth();
+  const { colors, type } = useTheme();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,77 +18,66 @@ export default function ForgotPasswordScreen() {
 
   const handleReset = async () => {
     setError("");
-
-    if (!email.trim()) {
-      setError("El correo es obligatorio.");
-      return;
-    }
-    if (!email.includes("@")) {
-      setError("Introduce un correo válido.");
-      return;
-    }
-
+    if (!email.trim()) { setError("El correo es obligatorio."); return; }
+    if (!email.includes("@")) { setError("Introduce un correo válido."); return; }
     setLoading(true);
-    try {
-      await resetPassword(email.trim());
-      setSent(true);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Algo salió mal.");
-    } finally {
-      setLoading(false);
-    }
+    try { await resetPassword(email.trim()); setSent(true); }
+    catch (e) { setError(e instanceof Error ? e.message : "Algo salió mal."); }
+    finally { setLoading(false); }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Recuperar contraseña</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={styles.topSection}>
+        <Image source={logo} style={styles.logo} resizeMode="contain" />
+
+        <Text style={[styles.title, { fontFamily: type.h1.fontFamily, fontSize: type.h1.size, lineHeight: type.h1.lineHeight, color: colors.text.primary }]}>
+          Recuperar contraseña
+        </Text>
+      </View>
 
       {sent ? (
         <View style={styles.sentContainer}>
-          <Text style={styles.sentText}>
-            Te hemos enviado un correo con las instrucciones para restablecer tu
-            contraseña. Revisa tu bandeja de entrada.
+          <Text style={[styles.sentText, { color: colors.text.primary, fontFamily: type.body.fontFamily, fontSize: type.body.size, lineHeight: type.body.lineHeight }]}>
+            Te hemos enviado un correo con las instrucciones para restablecer tu contraseña. Revisa tu bandeja de entrada.
           </Text>
-          <TouchableOpacity onPress={() => router.replace("/(auth)/login")}>
-            <Text style={styles.linkText}>Volver al inicio de sesión</Text>
-          </TouchableOpacity>
+          <Pressable onPress={() => router.replace("/(auth)/login")}>
+            <Text style={[styles.linkText, { color: colors.primary, fontFamily: type.bodyMedium.fontFamily }]}>Volver al inicio de sesión</Text>
+          </Pressable>
         </View>
       ) : (
         <>
-          <Text style={styles.subtitle}>
-            Escribe tu correo y te enviaremos un enlace para crear una nueva
-            contraseña.
+          <Text style={[styles.subtitle, { color: colors.text.secondary, fontFamily: type.body.fontFamily, fontSize: type.body.size, lineHeight: type.body.lineHeight }]}>
+            Escribe tu correo y te enviaremos un enlace para crear una nueva contraseña.
           </Text>
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+          {error ? (
+            <Text style={[styles.error, { color: colors.accent.terracotta, fontFamily: type.bodySmall.fontFamily, fontSize: type.bodySmall.size }]}>
+              {error}
+            </Text>
+          ) : null}
 
-          <TextInput
-            style={styles.input}
-            placeholder="Correo electrónico"
-            placeholderTextColor="#9AAD98"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            autoComplete="email"
-            editable={!loading}
-          />
+          <View style={styles.form}>
+            <Input
+              label="Correo electrónico"
+              placeholder="tu@correo.com"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              autoComplete="email"
+              editable={!loading}
+              wrapperStyle={styles.inputWrapper}
+            />
 
-          <TouchableOpacity
-            style={[styles.primaryButton, loading && styles.buttonDisabled]}
-            onPress={handleReset}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#FFF" />
-            ) : (
-              <Text style={styles.primaryButtonText}>Enviar enlace</Text>
-            )}
-          </TouchableOpacity>
+            <Button onPress={handleReset} loading={loading} style={styles.fullButton}>
+              Enviar enlace
+            </Button>
+          </View>
 
-          <TouchableOpacity onPress={() => router.replace("/(auth)/login")}>
-            <Text style={styles.linkText}>Volver al inicio de sesión</Text>
-          </TouchableOpacity>
+          <Pressable onPress={() => router.replace("/(auth)/login")} style={styles.backLink}>
+            <Text style={[styles.linkText, { color: colors.primary, fontFamily: type.bodyMedium.fontFamily }]}>Volver al inicio de sesión</Text>
+          </Pressable>
         </>
       )}
     </View>
@@ -99,77 +87,55 @@ export default function ForgotPasswordScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#F5F8F3",
-    padding: 24,
+    alignItems: "center",
+    paddingHorizontal: 24,
+  },
+  topSection: {
+    alignItems: "center",
+    marginBottom: 32,
+  },
+  logo: {
+    width: 72,
+    height: 72,
+    marginBottom: 16,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#2D3F2A",
-    marginBottom: 8,
+    marginBottom: 0,
   },
   subtitle: {
-    fontSize: 14,
-    color: "#6B7B6A",
-    marginBottom: 36,
     textAlign: "center",
-    lineHeight: 20,
     maxWidth: 320,
+    marginBottom: 32,
   },
-  error: {
-    color: "#C44D34",
-    fontSize: 14,
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  input: {
+  form: {
     width: "100%",
-    maxWidth: 340,
-    height: 48,
-    borderWidth: 1,
-    borderColor: "#C5D1C1",
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    color: "#2D3F2A",
-    backgroundColor: "#FFF",
-    marginBottom: 12,
+    gap: 16,
   },
-  primaryButton: {
+  inputWrapper: {
     width: "100%",
-    maxWidth: 340,
-    height: 48,
-    backgroundColor: "#4A7C59",
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 8,
-    marginBottom: 16,
   },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
-  primaryButtonText: {
-    color: "#FFF",
-    fontSize: 16,
-    fontWeight: "600",
+  backLink: {
+    marginTop: 24,
   },
   linkText: {
-    color: "#4A7C59",
     fontSize: 14,
     fontWeight: "600",
+  },
+  fullButton: {
+    minWidth: "100%",
+  },
+  error: {
+    marginBottom: 16,
+    textAlign: "center",
+    paddingHorizontal: 16,
   },
   sentContainer: {
     alignItems: "center",
     paddingHorizontal: 16,
   },
   sentText: {
-    color: "#2D3F2A",
-    fontSize: 16,
     textAlign: "center",
-    lineHeight: 22,
     marginBottom: 32,
     maxWidth: 320,
   },

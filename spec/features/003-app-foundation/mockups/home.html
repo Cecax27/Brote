@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Brote - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&amp;family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-bright": "#fafaf4",
+                        "mustard": "#D7B65A",
+                        "inverse-on-surface": "#f1f1ec",
+                        "surface-container-low": "#f4f4ef",
+                        "primary-fixed-dim": "#add0a7",
+                        "inverse-primary": "#add0a7",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1a1c19",
+                        "inverse-surface": "#2f312e",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#653949",
+                        "on-secondary-container": "#785c38",
+                        "on-error": "#ffffff",
+                        "surface": "#FFFCF8",
+                        "ai-accent": "#EEF4EA",
+                        "secondary-fixed-dim": "#e5c095",
+                        "on-tertiary-container": "#fffbff",
+                        "background": "#F8F6F2",
+                        "secondary-fixed": "#ffddb7",
+                        "secondary-container": "#fdd6aa",
+                        "primary-soft": "#A8C29A",
+                        "primary": "#456343",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#434840",
+                        "surface-container-highest": "#e3e3de",
+                        "outline-variant": "#c3c8be",
+                        "outline": "#737970",
+                        "tertiary-fixed-dim": "#f2b6c9",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#304e2f",
+                        "surface-tint": "#476645",
+                        "on-primary-fixed": "#042107",
+                        "border": "#E8E3DA",
+                        "surface-dim": "#dadad5",
+                        "on-secondary-fixed": "#2a1700",
+                        "terracotta": "#C87C5A",
+                        "surface-variant": "#e3e3de",
+                        "primary-fixed": "#c9ecc2",
+                        "secondary": "#755936",
+                        "surface-container-high": "#e8e8e3",
+                        "tertiary-fixed": "#ffd9e3",
+                        "surface-secondary": "#F3EFE8",
+                        "on-primary-container": "#f7fff1",
+                        "text-secondary": "#7B756E",
+                        "text-main": "#3F3A36",
+                        "on-tertiary-fixed": "#330f1d",
+                        "on-secondary-fixed-variant": "#5b4221",
+                        "on-background": "#1a1c19",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#996677",
+                        "surface-container": "#eeeee9",
+                        "tertiary": "#7d4e5e",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#5d7c5a"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "12px",
+                        "2xl": "20px",
+                        "3xl": "28px",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "lg": "24px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "xxl": "48px"
+                    },
+                    fontFamily: {
+                        "body-md": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label-md": ["Inter", "sans-serif"],
+                        "headline-md": ["Literata", "serif"],
+                        "display": ["Fraunces", "serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "heading": ["Fraunces", "serif"],
+                        "caption": ["Inter", "sans-serif"],
+                        "display-lg": ["Literata", "serif"],
+                        "headline-lg": ["Literata", "serif"]
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .botanical-shadow {
+            box-shadow: 0 4px 20px -2px rgba(69, 99, 67, 0.08);
+        }
+        body {
+            background-color: #F8F6F2;
+            color: #3F3A36;
+        }
+        .watercolor-bg {
+            background-image: radial-gradient(circle at 10% 20%, rgba(168, 194, 154, 0.1) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(215, 182, 90, 0.05) 0%, transparent 40%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md watercolor-bg min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-md">
+<div class="max-w-7xl mx-auto flex justify-between items-center px-lg py-md">
+<h1 class="font-heading text-headline-lg text-primary">Brote</h1>
+<div class="flex gap-md items-center">
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-secondary transition-colors duration-150 active:scale-95">
+<span class="material-symbols-outlined text-outline">search</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-secondary transition-colors duration-150 active:scale-95 relative">
+<span class="material-symbols-outlined text-outline">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-mustard rounded-full border-2 border-background"></span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-xl mx-auto px-lg pt-24 space-y-xl">
+<!-- Hero Greeting -->
+<section class="relative overflow-visible py-md">
+<div class="relative z-10 space-y-sm">
+<p class="font-body-md text-text-secondary">¡Buenos días, Sofi! ☀️</p>
+<h2 class="font-display text-display-lg text-text-main leading-tight">
+                    Tu jardín está<br/>creciendo hermoso 🌿
+                </h2>
+<p class="font-body-md text-text-secondary max-w-[240px]">
+                    Aquí tienes lo que necesita tu atención hoy.
+                </p>
+</div>
+<!-- Hero Decorative Image -->
+<div class="absolute -top-4 -right-8 w-56 h-56 pointer-events-none">
+<img class="w-full h-full object-contain opacity-90" data-alt="A delicate watercolor illustration of a lush green Pothos plant in a terracotta pot sitting on a rustic wooden shelf next to a framed leaf print. The style is soft and airy, with gentle morning light filtering through, emphasizing the organic textures and tranquil atmosphere of a Scandinavian-inspired home garden." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6Rt3HuccXbf1WrnJ2BDBkcIFPMvB9vIiv8CEbz6z_4hiRC-zEVXYXDkiVHBBvSP5OGM7aRpmhukaZ3efHZdcXpUPu2tzRqX1x8VRARa8_gwbA9npEr5b7uXwUO0bAeTYOuQYtDPRd4oTysULVL7pJDZ_kWqCs_vm6SBNEEfdWTirFTJlvZaYwM3A3-ZJJI7pCX_bFs11MaVXXTTafiOzYfG_OuK7kpXVEd69IrEyiCbHl-NRDCU8YNQ"/>
+</div>
+</section>
+<!-- Tasks Section -->
+<section class="bg-surface rounded-3xl p-lg botanical-shadow border border-border">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-headline-md text-text-main border-b-2 border-primary-soft/30 pb-1">Hoy tienes por hacer</h3>
+<a class="font-label-md text-primary flex items-center gap-1 hover:underline" href="#">
+                    Ver calendario 
+                    <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</a>
+</div>
+<div class="space-y-md">
+<!-- Task 1 -->
+<div class="flex items-center p-md rounded-2xl bg-white border border-border hover:border-primary-soft transition-all cursor-pointer group active:scale-[0.98]">
+<div class="w-12 h-12 rounded-full bg-ai-accent flex items-center justify-center mr-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-semibold text-text-main">Regar</p>
+<p class="text-caption text-text-secondary">2 plantas</p>
+</div>
+<img class="w-14 h-14 object-contain mr-sm opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A small, detailed watercolor painting of a Pilea Peperomioides in a white ceramic pot, featuring round green leaves with soft shadowed edges and a handcrafted aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJKRo5vumx6C3T5SpGt9pLFpFhCqTM6k9qFpPvpmELGmjnO5k3UM7-1zFGEIXJZproseF0yXKfdCwdxDgCPYqwaE02_z37TmdBLK13-B6-AZ6TdFoWn7erS4Cvde99hwNSKS-41mTy5-rEHk4aD_EXRglLomC_tMVN8kPo6JrHQIFwRdJV-wE4ZLnmqlVDIwurBb6ETQ-v-Rqai8YJLOOz8y3qc9oCU3-ZI-4CcwoDaSw3TsQm9N_eRw"/>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<!-- Task 2 -->
+<div class="flex items-center p-md rounded-2xl bg-white border border-border hover:border-primary-soft transition-all cursor-pointer group active:scale-[0.98]">
+<div class="w-12 h-12 rounded-full bg-[#FFF9E6] flex items-center justify-center mr-md">
+<span class="material-symbols-outlined text-mustard" style="font-variation-settings: 'FILL' 1;">light_mode</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-semibold text-text-main">Buscar mejor luz</p>
+<p class="text-caption text-text-secondary">1 planta</p>
+</div>
+<img class="w-14 h-14 object-contain mr-sm opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A minimalist watercolor illustration of a Monstera Deliciosa leaf, showing its characteristic fenestrations with soft emerald and sage green washes on a textured paper background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGK0GoDBEHcHEJQGZgNXmi264sl_eP3-eUgGYdX6AOk-p0-0YClGHvE1P14PEtoA2QrfgjIHelzlXOG6QpRB9ZzPBrONL78i6I251NFfj0k5-qCWBwMR4WWrUGFDbu0Cn-mSHEB1rjvZfmbXAPVOwCz5_YrWyD4ehpe5yfYHoi-mY9ZYCEwKnUTPKfthmhz3UGL35v7rO8WnJVDHiZi-ZomNECkAd_muDlPXOIw-nRinNunxRmAklc_Q"/>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<!-- Task 3 -->
+<div class="flex items-center p-md rounded-2xl bg-white border border-border hover:border-primary-soft transition-all cursor-pointer group active:scale-[0.98]">
+<div class="w-12 h-12 rounded-full bg-primary-fixed-dim/20 flex items-center justify-center mr-md">
+<span class="material-symbols-outlined text-primary">eco</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-semibold text-text-main">Revisar hojas</p>
+<p class="text-caption text-text-secondary">1 planta</p>
+</div>
+<img class="w-14 h-14 object-contain mr-sm opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A gentle watercolor rendering of a small ZZ plant in a textured beige pot, focusing on the glossy dark green leaves and a handcrafted, sketchy linework style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVTyvUQQNcu6iEcXwK7Bi30-75WSK1TqQo-VpRmRZ8DtkLfXCGy8M4V8Q0yez0yYRx037SFIwdbkS78TiTcCW1fYY1X4YyeogN3WmbTSrSPQANVZOLVuXMziFUFrbsU3Lqnyb5UupQqfTs4MakkZJ_IAmrEhvUxt6ULLaPiGgI6Yo8kNSzdG9LFphYlwJ0103MANolqJGxYl0OS4N_vNTKjJfPEBJWcDyfW2a-hiLTXnYO2yHRz4IpKw"/>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Bottom Cards Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Ultima Alegria Card -->
+<div class="bg-surface rounded-3xl p-md border border-border botanical-shadow flex flex-col justify-between h-[220px] relative overflow-hidden group">
+<div class="relative z-10">
+<div class="flex justify-between items-start">
+<p class="text-caption text-primary font-medium tracking-wide uppercase">Última alegría</p>
+<button class="text-outline hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+<h4 class="font-headline-md text-text-main mt-sm leading-snug">Tu Pothos sacó<br/>una hoja nueva 🌿</h4>
+<p class="text-caption text-text-secondary mt-1">Ayer</p>
+</div>
+<div class="absolute bottom-0 right-0 w-32 h-32 -mr-4 -mb-4 pointer-events-none transition-transform group-hover:scale-110 duration-500">
+<img class="w-full h-full object-contain" data-alt="A graceful watercolor branch of a golden pothos with variegated green and yellow leaves, extending diagonally across a warm cream background, executed with soft edges and fluid brushstrokes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfUALXQmiluoIV1R0Q6MX8MVHwlbDaypTe3zrbwVDSkNvEREjZBjzV7Ye-sPi_wR1XEVABdEY0PEtJyO2AoHs4GhB5hit-a0yy_29U4yrv0rpJHEuT_BAv8CAXhTn60GKb5fWgIzGLAxAo-0pX3wvCd9o_QTD7MEei17LKnd98OS6VtPDPrs6aq52qI32qyZmdR0wRFf3OdIeGqJTru6kI0mggyb1IfNnyH1gS6K2EqkpoXgvxpZR66w"/>
+</div>
+</div>
+<!-- Flora AI Card -->
+<div class="bg-ai-accent rounded-3xl p-md border border-primary-soft/20 botanical-shadow flex flex-col justify-between h-[220px] relative overflow-hidden">
+<div class="relative z-10">
+<p class="text-caption text-primary font-medium tracking-wide uppercase">Pregunta algo a</p>
+<h4 class="font-display text-headline-lg text-primary">Flora</h4>
+<p class="text-caption text-text-secondary mt-1">Tu amiga experta<br/>en plantas 🌿</p>
+</div>
+<div class="relative z-10 mt-auto">
+<button class="bg-primary text-white px-md py-sm rounded-3xl flex items-center gap-2 hover:bg-primary/90 transition-all active:scale-95 shadow-md">
+<span class="material-symbols-outlined text-[18px]">chat_bubble</span>
+<span class="font-label-md">Hablar con Flora</span>
+</button>
+</div>
+<div class="absolute top-4 right-4 w-28 h-28 pointer-events-none">
+<img class="w-full h-full object-contain" data-alt="A charming, character-styled watercolor flower with a friendly smiling face, soft rounded petals in cream white, and a cute green stem, sitting in a small terracotta pot. The style is whimsical and friendly, mimicking a storybook illustration." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr5AkPZlpqs9iID2i2I9jUvzgJlbX4NrQ3A7Xxvjf75tKetapwUNUKwXIlanZ6pb_5C0393gwiKvlRjF3JpkY4o8LkHE8zE9iGwnR2r-MaPUQbJfsR-xgD8izkvaE_Df4h0XzvI7VRtNbEUc7ODh0nhldOlKvLuKuvc-_WGZzFeW-htI-nB4aAWzTInGgxQ_usYd_f-RV3l7u-JQ6QUzDoylwfE8pVpAMRDHS_aMt6SULI35g-Ow7S1A"/>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md rounded-t-3xl shadow-lg border-t border-border/50">
+<div class="max-w-xl mx-auto flex justify-around items-end px-lg pb-8 pt-4">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-3xl px-5 py-2 transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="text-label-md">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary px-4 py-1 transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1">eco</span>
+<span class="text-label-md">Mis plantas</span>
+</a>
+<!-- FAB - Center -->
+<div class="relative -top-10">
+<button class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center shadow-xl border-4 border-background active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary px-4 py-1 transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1">auto_stories</span>
+<span class="text-label-md">Diario</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary px-4 py-1 transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1">inventory_2</span>
+<span class="text-label-md">Inventario</span>
+</a>
+</div>
+<!-- Safe area spacing for mobile -->
+<div class="h-4 bg-transparent"></div>
+</nav>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Potential subtle haptic or animation trigger
+            });
+        });
+
+        // Simple scroll header effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-sm');
+            } else {
+                header.classList.remove('shadow-sm');
+            }
+        });
+    </script>
+</body></html>
