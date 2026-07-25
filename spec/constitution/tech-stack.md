@@ -5,7 +5,7 @@
 - **Languages:** TypeScript
 - **Framework / runtime:** React Native (Expo)
 - **Database:** Supabase (PostgreSQL)
-- **External sources:** Supabase Auth (email/password + deep-link), OpenAI (via Supabase Edge Functions, never client-side)
+- **External sources:** Supabase Auth (email/password + deep-link), brote-agent (Python + Gemini service on Google Cloud Run, reached over HTTP — never client-side AI)
 - **Deployments:** EAS Build (mobile)
 - **Package manager:** Npm
 
@@ -22,11 +22,10 @@ src/
 src/lib/                  # shared libs (supabase client, helpers)
 assets/                   # images, fonts
 supabase/                 # tracked Supabase CLI project
-  config.toml             # Supabase project config
-  migrations/             # numbered SQL migrations
-  functions/              # Edge Functions (AI proxy, etc.)
-.env                      # local only, gitignored
-.env.example              # committed placeholders
+    config.toml             # Supabase project config
+    migrations/             # numbered SQL migrations
+  .env                      # local only, gitignored
+  .env.example              # committed placeholders
 ```
 
 ## Commands
@@ -39,8 +38,6 @@ npm run android           # expo start --android
 npm run ios               # expo start --ios
 npm run web               # expo start --web
 npx supabase gen types --lang typescript --linked > src/lib/supabase/database.types.ts
-npx supabase functions deploy <function-name>  # deploy an Edge Function
-npx supabase functions serve                    # run Edge Functions locally
 ```
 
 ## Data models
@@ -54,9 +51,9 @@ are introduced in `001-supabase-foundation`: `plants` and `journal_entries`.
 - TypeScript strict mode (via `expo/tsconfig.base`)
 - Files and code in English; app UI and AI conversations in Spanish
 - No secrets in source code — use `EXPO_PUBLIC_*` env vars read via `process.env` for Supabase keys
-- AI provider keys live in **Supabase secrets** (set via `supabase secrets set`), never in client env vars
+- The Gemini key lives in **brote-agent**, never in the app — the app only holds the agent's public URL (`EXPO_PUBLIC_BROTE_AGENT_URL`)
 - Supabase schema changes ship as numbered migrations under `supabase/migrations/`
-- Edge Functions are the only AI provider boundary; the app never calls an AI vendor directly
+- brote-agent is the only AI provider boundary; the app never calls Gemini directly. Contract: `GET /health` and `POST /chat` (see `spec/constitution/roadmap.md` V0.3)
 
 ## Visual style
 
@@ -65,6 +62,6 @@ are introduced in `001-supabase-foundation`: `plants` and `journal_entries`.
 ## Hard limits
 
 - No secrets in source code (Supabase URL + anon key live in `EXPO_PUBLIC_*` env vars, never hardcoded)
-- AI provider keys stored in Supabase secrets, never in client — app routes all AI calls through Edge Functions
+- AI (Gemini) key stored in brote-agent, never in the app — app calls brote-agent only (`EXPO_PUBLIC_BROTE_AGENT_URL`); Supabase holds conversation/message history, not AI keys
 - Mobile builds must go through EAS (`eas build`); no direct `expo publish`
 - All TypeScript strict mode (via `expo/tsconfig.base`)

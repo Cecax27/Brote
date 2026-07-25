@@ -82,24 +82,30 @@ What: Measure ambient light via camera lux estimation and get placement advice.
 
 ## V0.3 AI
 
-All AI features are backend-proxied through Supabase Edge Functions. The app never holds an AI provider key — keys live in Supabase secrets. Start with OpenAI; swap providers server-side without app updates.
+All AI features are served by the **brote-agent** — a separate Python + Gemini service deployed on Google Cloud Run. The app never holds a Gemini key; the agent owns it. The app talks to the agent over HTTP at a configurable URL (`EXPO_PUBLIC_BROTE_AGENT_URL`):
+
+- `GET /health` → `{ "status": "ok" }`
+- `POST /chat` with `{ "message": string (1–2000 chars) }` → `{ "reply": string }`
+- Error envelope `{ "error": { "code", "message" } }` — `VALIDATION_ERROR` (422), `UPSTREAM_ERROR` (502), `INTERNAL_ERROR` (500)
+
+Conversations and messages persist on the app side in Supabase (`ai_conversations`, `ai_messages`); the agent is stateless. The agent API is in progress, so the foundation (chat UI, persistence, Flora avatar, typed agent client) is built against this contract first, with live `/chat` wiring landing once the agent is up. How plant context reaches the agent (extend the contract with a `context` field vs. embed in `message`) and how the app authenticates to the agent are pinned in the `008-ai-foundation` spec.
 
 ### 008-ai-foundation
 What: AI infrastructure, Flora avatar, chat UI, and message persistence.
-- [ ] Supabase Edge Function — proxy to OpenAI API, authenticated via Supabase session
+- [ ] brote-agent client — typed wrapper at `EXPO_PUBLIC_BROTE_AGENT_URL` (`getHealth()` → `/health`, `postChat(message)` → `/chat`); typed error handling for `VALIDATION_ERROR` / `UPSTREAM_ERROR` / `INTERNAL_ERROR`; mockable so UI ships before the agent is live
 - [ ] Database migration — `ai_conversations` table (id, user_id, plant_id?, title, created_at)
 - [ ] Database migration — `ai_messages` table (id, conversation_id, role, content, photo_url?, created_at)
-- [ ] Flora AI companion avatar — visual identity per brote-visual-guide
+- [ ] Flora AI companion avatar — visual identity per brote-visual-guide, using illustrations in `assets/images/illustrations/Flora/`
 - [ ] Chat UI — message bubbles, typing indicator, plant context header
 - [ ] Chat list — per-plant conversations, starting a new chat
-- [ ] Context builder — gathers plant info + recent journal entries to inject into the system prompt
+- [ ] Context builder — gathers plant info + recent journal entries to send to the agent (shape pinned to the finalized agent contract)
 - [ ] Message persistence — save every message, resume conversations
 - [ ] Loading / empty / error states
 
 ### 009-plant-identification
-What: Identify plant species from a photo using the vision model.
+What: Identify plant species from a photo using the agent's vision model.
 - [ ] "Identify plant" action on create-plant screen and camera view
-- [ ] Vision API integration via Edge Function — send photo, receive species suggestions
+- [ ] brote-agent vision integration — send photo, receive species suggestions (new agent endpoint beyond `/health` + `/chat`; defined with the agent API)
 - [ ] Species suggestion UI — confirm suggested species or pick / type manually
 - [ ] Confidence indicator — show how confident the AI is
 - [ ] Auto-fill species + care hints on confirmation
@@ -107,8 +113,8 @@ What: Identify plant species from a photo using the vision model.
 ### 010-ai-consultation
 What: Symptom diagnosis, care advice, and general plant chat — always ending with a concrete action.
 - [ ] "Ask about this plant" button on plant detail screen
-- [ ] System prompt engineering — AI has access to plant info, journal history, past photos, light history, and watering schedule
-- [ ] Symptom analysis — user sends photo + description, AI diagnoses and recommends action
+- [ ] Context builder — assembles plant info, journal history, past photos, light history, and watering schedule to send to the agent (system prompt engineering lives server-side in brote-agent)
+- [ ] Symptom analysis — user sends photo + description, agent diagnoses and recommends an action
 - [ ] Concrete action ending — every response includes a next-step the user can take
 - [ ] V1.0 enrichment — extend context builder to include inventory items (supplies used, fertilizer references)
 
