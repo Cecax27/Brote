@@ -13,6 +13,10 @@ const REPLIES: Record<string, string[]> = {
     "Las hojas caídas pueden ser por cambios bruscos de temperatura o por riego irregular.",
     "Si las puntas están marrones, revisa la humedad del ambiente. Un plato con piedras y agua ayuda.",
   ],
+  plant: [
+    "Voy a revisar el historial de esa planta para darte una respuesta más concreta.",
+    "Déjame ver cómo ha estado tu planta las últimas semanas.",
+  ],
   default: [
     "¡Hola! Soy Flora. Cuéntame, ¿cómo está tu planta?",
     "Cada planta es un mundo. Cuéntame un poco más sobre la tuya y te ayudo mejor.",
@@ -21,6 +25,11 @@ const REPLIES: Record<string, string[]> = {
 };
 
 function pickReply(input: AgentChatInput): string {
+  if (input.plant_id) {
+    const list = REPLIES.plant;
+    return list[Math.floor(Math.random() * list.length)];
+  }
+
   const lower = input.message.toLowerCase();
   const keywords: (keyof typeof REPLIES)[] = ["riego", "luz", "hojas"];
   for (const kw of keywords) {

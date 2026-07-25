@@ -25,4 +25,4 @@ export function resetAgent(): void {
 
 export { AgentError } from "./client";
 export { MockAgentClient } from "./mock";
-export type { AgentClient, AgentChatInput, PlantContext } from "./client";
+export type { AgentClient, AgentChatInput } from "./client";

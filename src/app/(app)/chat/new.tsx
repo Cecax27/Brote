@@ -10,7 +10,6 @@ import { FloraTypingIndicator } from "@/components/FloraTypingIndicator";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { EmptyState } from "@/components/EmptyState";
 import { fetchPlant, type Plant } from "@/lib/supabase/plants";
-import { buildPlantContext } from "@/lib/agent/context";
 import { getAgent, AgentError } from "@/lib/agent";
 import { createConversation } from "@/lib/supabase/ai-conversations";
 import {
@@ -90,18 +89,9 @@ export default function NewChatScreen() {
         content: text,
       });
 
-      let context;
-      if (plantId) {
-        try {
-          context = await buildPlantContext(plantId);
-        } catch {
-          // Context build failure shouldn't block the chat
-        }
-      }
-
       const reply = await getAgent().postChat({
         message: text,
-        context,
+        plant_id: plantId ?? null,
         accessToken: session?.access_token ?? "",
       });
 

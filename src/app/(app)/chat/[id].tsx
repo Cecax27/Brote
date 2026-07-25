@@ -9,7 +9,6 @@ import { ChatInput } from "@/components/ChatInput";
 import { FloraTypingIndicator } from "@/components/FloraTypingIndicator";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { EmptyState } from "@/components/EmptyState";
-import { buildPlantContext } from "@/lib/agent/context";
 import { getAgent, AgentError } from "@/lib/agent";
 import {
   fetchConversation,
@@ -87,18 +86,9 @@ export default function ConversationScreen() {
         content: text,
       });
 
-      let context;
-      if (conversation?.plant_id) {
-        try {
-          context = await buildPlantContext(conversation.plant_id);
-        } catch {
-          // Context build failure shouldn't block the chat
-        }
-      }
-
       const reply = await getAgent().postChat({
         message: text,
-        context,
+        plant_id: conversation?.plant_id ?? null,
         accessToken: session?.access_token ?? "",
       });
 

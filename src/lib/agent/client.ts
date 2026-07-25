@@ -1,4 +1,5 @@
 export type AgentErrorCode =
+  | "UNAUTHORIZED"
   | "VALIDATION_ERROR"
   | "UPSTREAM_ERROR"
   | "INTERNAL_ERROR"
@@ -15,30 +16,9 @@ export class AgentError extends Error {
   }
 }
 
-export interface PlantContext {
-  plant: {
-    id: string;
-    name: string;
-    species: string | null;
-    location: string | null;
-    notes: string | null;
-  };
-  recentEntries: {
-    type: string;
-    content: string | null;
-    created_at: string;
-  }[];
-  schedule?: {
-    frequency_days: number;
-    last_watered_at: string | null;
-    next_due_at: string;
-    active: boolean;
-  };
-}
-
 export interface AgentChatInput {
   message: string;
-  context?: PlantContext;
+  plant_id?: string | null;
   accessToken: string;
 }
 
@@ -61,6 +41,8 @@ interface AgentErrorEnvelope {
 
 function mapHttpToErrorCode(status: number): AgentErrorCode {
   switch (status) {
+    case 401:
+      return "UNAUTHORIZED";
     case 422:
       return "VALIDATION_ERROR";
     case 502:
@@ -111,14 +93,14 @@ export function createAgentClient(
 
       if (!input.accessToken) {
         throw new AgentError(
-          "NETWORK",
+          "UNAUTHORIZED",
           "Inicia sesión para hablar con Flora.",
         );
       }
 
       const body: Record<string, unknown> = { message: trimmed };
-      if (input.context) {
-        body.context = input.context;
+      if (input.plant_id) {
+        body.plant_id = input.plant_id;
       }
 
       try {
