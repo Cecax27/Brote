@@ -236,7 +236,7 @@ export default function HomeScreen() {
               Tu amiga experta{"\n"}en plantas 🌿
             </Text>
             <View style={{ marginTop: spacing.md }}>
-              <Button variant="primary" onPress={() => {}}>
+              <Button variant="primary" onPress={() => router.push("/chat" as never)}>
                 Hablar con Flora
               </Button>
             </View>

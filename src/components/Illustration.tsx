@@ -1,11 +1,8 @@
 import { View, ViewStyle, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTheme } from "@/theme";
+import { FloraAvatar } from "@/components/FloraAvatar";
 
-/**
- * Placeholder illustrations using MaterialCommunityIcons as line-art stand-ins.
- * Real watercolor art replaces these assets later.
- */
 const iconMap: Record<string, { name: keyof typeof MaterialCommunityIcons.glyphMap; color: string }> = {
   leaf: { name: "leaf", color: "#6E8E6A" },
   pot: { name: "flower-tulip-outline", color: "#C7A47B" },
@@ -22,6 +19,11 @@ type Props = {
 
 export function Illustration({ name, size = 120, style }: Props) {
   const { colors } = useTheme();
+
+  if (name === "flora") {
+    return <FloraAvatar mood="idle" size={size} style={style} />;
+  }
+
   const def = iconMap[name] ?? iconMap.leaf;
 
   const container: ViewStyle = {

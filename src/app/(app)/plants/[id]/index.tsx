@@ -399,11 +399,33 @@ export default function PlantDetailScreen() {
         }
       />
 
-      <EmptyState
-        illustration="flora"
-        title="Consulta a Flora"
-        subtitle="Pregunta a Flora sobre esta planta. Próximamente."
-      />
+      <View style={{ marginTop: spacing.md }}>
+        <Text
+          style={[
+            styles.sectionTitle,
+            {
+              fontFamily: type.h2.fontFamily,
+              fontSize: type.h2.size,
+              color: colors.text.primary,
+            },
+          ]}
+        >
+          Flora
+        </Text>
+        <View style={{ marginTop: spacing.md }}>
+          <Button
+            variant="secondary"
+            onPress={() =>
+              router.push({
+                pathname: "/chat/new",
+                params: { plantId: id },
+              } as never)
+            }
+          >
+            Consultar a Flora
+          </Button>
+        </View>
+      </View>
     </ScrollView>
   );
 }

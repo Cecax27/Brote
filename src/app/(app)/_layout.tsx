@@ -75,6 +75,27 @@ export default function AppLayout() {
           title: "Riegos",
         }}
       />
+      <Stack.Screen
+        name="chat/index"
+        options={{
+          title: "Flora",
+          headerBackTitle: "Volver",
+        }}
+      />
+      <Stack.Screen
+        name="chat/new"
+        options={{
+          title: "Nuevo chat",
+          headerBackTitle: "Cerrar",
+        }}
+      />
+      <Stack.Screen
+        name="chat/[id]"
+        options={{
+          title: "Flora",
+          headerBackTitle: "Volver",
+        }}
+      />
     </Stack>
   );
 }
