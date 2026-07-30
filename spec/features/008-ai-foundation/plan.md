@@ -2,16 +2,16 @@
 
 ## Approach
 
-Six layers, built incrementally against a mockable agent so the chat UI ships before brote-agent is live. The data layer lands first (tables → typed helpers); the agent client + mock second (no server needed); context builder third; then the Flora visual identity + chat components build on all three; finally the chat screens and the two screen integrations (home + plant detail) are retrofitted to point at the new routes.
+Six layers, built incrementally against a mockable agent so the chat UI ships before brote-agent is live. The data layer lands first (tables → typed helpers); the agent client + mock second (no server needed); plant context is just the conversation's `plant_id` forwarded in the request body (no client-side builder — the agent fetches context server-side with the bearer JWT); then the Flora visual identity + chat components build on the client; finally the chat screens and the two screen integrations (home + plant detail) are retrofitted to point at the new routes.
 
 ```
-Layer 1 — Data layer            Layer 2 — Agent client          Layer 3 — Context          Layer 4 — Components                Layer 5 — Screens                       Layer 6 — Integration
-─────────────────────           ──────────────────────           ────────────────           ────────────────────────────           ──────────────────────────────────       ──────────────────────────────────
-ai_conversations table          agent/client.ts (AgentClient)   agent/context.ts            FloraAvatar (watercolor PNGs)          /chat (list, "Flora")                    Home: "Hablar con Flora" → /chat
-ai_messages table               agent/mock.ts (MockAgent)        buildPlantContext()         ChatMessageBubble                     /chat/new (composer, optional plantId)   Plant detail: "Consultar a Flora" → /chat/new?plantId=
-RLS + indexes + gen-types       AgentError (typed envelope)      PlantContext shape           FloraTypingIndicator (3 leaves)       /chat/[id] (conversation, persist)       _layout: register chat/* routes
-ai-conversations.ts helpers     supabase JWT bearer auth                                       ChatContextHeader, ChatInput
-ai-messages.ts helpers
+Layer 1 — Data layer            Layer 2 — Agent client          Layer 3 — Components         Layer 4 — Screens                     Layer 5 — Integration
+─────────────────────           ──────────────────────           ────────────────────────────  ──────────────────────────────────       ──────────────────────────────────
+ai_conversations table          agent/client.ts (AgentClient)   FloraAvatar (watercolor PNGs) /chat (list, "Flora")                    Home: "Hablar con Flora" → /chat
+ai_messages table               agent/mock.ts (MockAgent)        ChatMessageBubble            /chat/new (composer, optional plantId)   Plant detail: "Consultar a Flora" → /chat/new?plantId=
+RLS + indexes + gen-types       AgentError (typed envelope)      FloraTypingIndicator (3 leaves) /chat/[id] (conversation, persist)    _layout: register chat/* routes
+ai-conversations.ts helpers     supabase JWT bearer auth          ChatContextHeader, ChatInput
+ai-messages.ts helpers          plant_id forwarded in body (agent gathers context server-side)
 ```
 
 The mockable seam is the cornerstone: every screen and component depends on an `AgentClient` interface, never on `fetch` directly. The real `createAgentClient` hits brote-agent; the `MockAgentClient` returns canned Spanish replies with a short `setTimeout` so animations and persistence can be exercised without a URL set. When brote-agent is ready, swapping is a one-line factory change in a single composition root.
@@ -138,22 +138,16 @@ export async function createMessage(input: Omit<ConversationMessageInsert, "">):
 Isolates every network concern. Screens depend on the `AgentClient` interface, never `fetch`.
 
 ```ts
-export type AgentErrorCode = "VALIDATION_ERROR" | "UPSTREAM_ERROR" | "INTERNAL_ERROR" | "NETWORK";
+export type AgentErrorCode = "VALIDATION_ERROR" | "UPSTREAM_ERROR" | "INTERNAL_ERROR" | "UNAUTHORIZED" | "NETWORK";
 
 export class AgentError extends Error {
   constructor(public code: AgentErrorCode, message: string) { super(message); this.name = "AgentError"; }
 }
 
-export interface PlantContext {
-  plant: { id: string; name: string; species: string | null; location: string | null; notes: string | null };
-  recentEntries: { type: string; content: string | null; created_at: string }[];
-  schedule?: { frequency_days: number; last_watered_at: string | null; next_due_at: string; active: boolean };
-}
-
 export interface AgentChatInput {
-  message: string;            // 1..2000 validated client-side before send
-  context?: PlantContext;
-  accessToken: string;        // Supabase session JWT
+  message: string;               // 1..2000 validated client-side before send
+  plant_id?: string | null;      // rooted conversation's plant; null/omitted = general chat
+  accessToken: string;           // Supabase session JWT
 }
 
 export interface AgentClient {
@@ -168,9 +162,9 @@ export function createAgentClient(options: AgentClientOptions = {}): AgentClient
 
 - `createAgentClient` reads `process.env.EXPO_PUBLIC_BROTE_AGENT_URL!` when `baseUrl` is omitted; `fetchImpl` defaults to global `fetch` (overridable for tests). One factory, one seam.
 - `getHealth` — `GET {baseUrl}/health`, returns `{ status: "ok" }`. Wrapped in `try/catch` that rethrows as `AgentError("NETWORK", ...)`.
-- `postChat` — `POST {baseUrl}/chat` with headers `Authorization: Bearer <accessToken>`, `Content-Type: application/json` and body `{ message, context? }`. On a `200` returns `data.reply as string`. On a non-200 with the agent's error envelope, throws `AgentError(body.error.code, body.error.message)`. On a network error / `AbortError` / unparseable body, throws `AgentError("NETWORK", "Flora no pudo responder ahora. Inténtalo de nuevo.")`.
+- `postChat` — `POST {baseUrl}/chat` with headers `Authorization: Bearer <accessToken>`, `Content-Type: application/json` and body `{ message, plant_id? }`. On a `200` returns `data.reply as string`. On a non-200 it maps the HTTP status to an `AgentErrorCode` (401 → `UNAUTHORIZED`, 422 → `VALIDATION_ERROR`, 502 → `UPSTREAM_ERROR`, 500 → `INTERNAL_ERROR`, otherwise `NETWORK`) and uses the agent's `error.message` when the body parses, else a calm Spanish default. On a network error / `AbortError` / unparseable body, throws `AgentError("NETWORK", "Flora no pudo responder ahora. Inténtalo de nuevo.")`.
 - Client-side pre-validation: if `message` is empty or `> 2000` chars, throw `AgentError("VALIDATION_ERROR", "Escribe un mensaje entre 1 y 2000 caracteres.")` *before* the fetch — short-circuit the trip.
-- The Supabase session token comes from `useAuth()` (already exposes `session`); the caller passes `session?.access_token ?? ""`. If missing, `postChat` throws `AgentError("NETWORK", "Inicia sesión para hablar con Flora.")` — defensive, but `useAuth`'s session is non-null inside `app`.
+- The Supabase session token comes from `useAuth()` (already exposes `session`); the caller passes `session?.access_token ?? ""`. If missing, `postChat` throws `AgentError("UNAUTHORIZED", "Inicia sesión para hablar con Flora.")` *before* the fetch — defensive, but `useAuth`'s session is non-null inside `app`.
 - The header carries no Gemini key; the agent owns it. The only credential on the wire is the Supabase JWT, which the agent verifies against Supabase JWKS (agent-side; out of scope for this app).
 
 ### 4. Mock agent — `src/lib/agent/mock.ts`
@@ -197,18 +191,12 @@ export class MockAgentClient implements AgentClient {
 
 Composition root: a single `src/lib/agent/index.ts` exports `getAgent(): AgentClient` that returns `new MockAgentClient()` when `process.env.EXPO_PUBLIC_BROTE_AGENT_URL` is unset **or** `EXPO_PUBLIC_BROTE_AGENT_MOCK === "1"` (dev override), otherwise `createAgentClient()`. Screens import from `@/lib/agent`, never directly from `client` or `mock` — the swap is one line.
 
-### 5. Context builder — `src/lib/agent/context.ts`
+### 5. Plant context — server-side (no client-side builder)
 
-```ts
-import type { PlantContext } from "./client";
+`008` ships **no** `src/lib/agent/context.ts` and **no** `PlantContext` type. Plant context gathering moved to brote-agent: the conversation screen forwards the rooted conversation's `plant_id` (or `null` for a general chat) in the `postChat` body, and the agent uses the bearer Supabase JWT to fetch the plant's info, recent journal, and schedule from Supabase as the user.
 
-export async function buildPlantContext(plantId: string): Promise<PlantContext>;
-```
-
-- Loads the plant via `fetchPlant(plantId)` (existing helper), the last 10 journal entries via `fetchJournalEntries(plantId)` (existing helper, already ordered desc), and the schedule via `fetchWateringSchedule(plantId)`.
-- Maps to the JSON-compact `PlantContext` defined in §3 — only the fields the agent needs (no internal row ids beyond `plant.id`; no `user_id`; Spanish-as-data only). Truncating to `recentEntries: 10` keeps payload size under control.
-- Cached per conversation in a weak `Map<conversationId, PlantContext>` so re-sends within the same thread don't re-fetch.
-- For a general conversation (no `plant_id`) the conversation screen passes `context: undefined`. The agent-side decision to handle absence-of-context is the agent's; the app simply omits the field.
+- Win: single source of truth (Supabase), nothing context-shaped built or cached in the bundle, and the app is decoupled from how the model consumes plant data — re-prompting or swapping the model touches no app code.
+- `010`'s richer context (light history, watering adherence, photos) is an **agent-side** extension: the agent fetches more from Supabase with the same JWT. The app's request shape stays `{ message, plant_id? }`; no new client field, no new helper.
 
 ### 6. Visual identity — `FloraAvatar` + extending `Illustration`
 
@@ -260,9 +248,8 @@ The only new "configuration" is the `EXPO_PUBLIC_BROTE_AGENT_URL` env var, alrea
 supabase/migrations/<timestamp>_create_ai_conversations_and_messages.sql  # both tables + RLS + indexes + trigger
 src/lib/supabase/ai-conversations.ts                                      # typed CRUD + ConversationWithPlant join
 src/lib/supabase/ai-messages.ts                                           # typed fetch + create (immutable)
-src/lib/agent/client.ts                                                   # AgentClient interface, createAgentClient, AgentError, PlantContext, AgentChatInput
+src/lib/agent/client.ts                                                   # AgentClient interface, createAgentClient, AgentError, AgentChatInput ({ message, plant_id?, accessToken })
 src/lib/agent/mock.ts                                                     # MockAgentClient (canned replies + delay)
-src/lib/agent/context.ts                                                  # buildPlantContext (plant + 10 entries + schedule)
 src/lib/agent/index.ts                                                    # getAgent() composition root (mock vs real)
 src/components/FloraAvatar.tsx                                            # watercolor PNGs by mood via expo-image
 src/components/ChatMessageBubble.tsx                                      # assistant/user bubbles
@@ -291,9 +278,9 @@ One: `supabase/migrations/<timestamp>_create_ai_conversations_and_messages.sql` 
 
 ## Decisions
 
-1. **`AgentClient` interface over `fetch` everywhere.** Every screen and component depends on `AgentClient`, never `fetch` directly. The mock and the real client share the interface; a single `getAgent()` in `src/lib/agent/index.ts` chooses between them. This is what lets the UI ship before brote-agent is live and lets the swap be a one-line change when the agent is ready. The contract extension (`{ message, context? }`) is documented in the type and sent by the app; the agent ignores fields it doesn't understand yet.
+1. **`AgentClient` interface over `fetch` everywhere.** Every screen and component depends on `AgentClient`, never `fetch` directly. The mock and the real client share the interface; a single `getAgent()` in `src/lib/agent/index.ts` chooses between them. This is what lets the UI ship before brote-agent is live and lets the swap be a one-line change when the agent is ready. The contract body `{ message, plant_id? }` is documented in the `AgentChatInput` type and sent by the app; the agent uses the bearer JWT + `plant_id` to fetch context server-side.
 
-2. **Context is sent as an optional body field, not a separate endpoint.** The agent contract is `POST /chat { message }`. We extend the body to `{ message, context? }` — backward-compatible JSON, where the agent treats an absent `context` as a general chat (no plant). A separate `/chat-with-context` endpoint would fragment the contract; embedding in `message` as a system prompt would couple the app to agent prompt engineering. Keeping `context` as a structured field lets the agent adopt it without changing the URL or breaking the strict-contract callers (other clients of brote-agent that send `message` only).
+2. **Plant context is `plant_id`, not a client-built context blob.** The agent contract settled on `POST /chat { message, plant_id? }` with `Authorization: Bearer <supabase-jwt>`. When a conversation is rooted at a plant the app forwards only its `plant_id`; when it's a general chat the field is omitted. brote-agent uses the bearer JWT to fetch the plant's info, journal, and schedule from Supabase *as the user* — a single source of truth (Supabase) and no context built, cached, or shipped from the bundle. This replaced an earlier "send a `{ message, context? }` blob built client-side by `buildPlantContext`" design; the server-side pull won because it keeps the bundle thin, decouples the app from prompt engineering, and lets the agent adopt richer context (`010`: light history, photos) without a new client field or app release.
 
 3. **No denormalized "last message" column on `ai_conversations`.** The chat list preview in V0.3 is a second per-conversation fetch (the newest `ai_messages` row) rather than a `last_message_*` column kept current via triggers. Avoids a denormalization that V0.4+ (inventory, etc.) would have to maintain. Adopted because the typical user has few conversations; denormalizing is cheap but premature. If list scrolling shows a perf issue at >50 conversations, a partial index + `last value` view is a non-migration fix.
 
@@ -307,7 +294,7 @@ One: `supabase/migrations/<timestamp>_create_ai_conversations_and_messages.sql` 
 
 8. **Immutable messages, no edit/delete UI in V0.3.** `ai_messages` has no `updated_at` and RLS includes `update`/`delete` policies only for completeness (FK cascade cleanup if a conversation is deleted). V0.3 has no edit/delete buttons. Conversation memory is part of Flora's promise — "she knows the complete history" — and surgically editing chat history is a rare need that doesn't belong in the foundation. Renaming/deleting conversations is a `013` cleanup flow concern.
 
-9. **`PlantContext` is data-only, Spanish-free.** The context builder ships data (`plant.name`, `journal.type`, etc.), not Spanish prose. The mission says conversations are in Spanish, but the system prompt that turns data into Flora's voice lives server-side in brote-agent (per the V0.3 intro). Keeping `PlantContext` data-only means the agent can re-localize, re-prompt, or feed a different model without an app update. The app's responsibility is "what the agent needs to know," not "how the agent says it."
+9. **Context is gathered server-side and Spanish-free at the seam.** The app forwards only `plant_id` (data, not prose); brote-agent pulls the plant's info/journal/schedule from Supabase with the bearer JWT and turns it into Flora's voice. The mission says conversations are in Spanish, but the system prompt that localizes that voice lives server-side in brote-agent (per the V0.3 intro). Keeping the seam data-only (`plant_id`) means the agent can re-localize, re-prompt, swap models, or enrich context (`010`) without an app update — the app's responsibility is forwarding the plant id, not shaping the model's input.
 
 10. **"Hablar con Flora" routes to the *list*, "Consultar a Flora" routes to a *new plant-rooted chat*.** The home button opens `/chat` — the entry to the whole Flora surface, including resuming a previous thread. The plant-detail button opens `/chat/new?plantId=…` — a direct plant-rooted start. Two mental models, two verbs, one routing model. We deliberately don't auto-pick "open the most recent plant-rooted conversation" because the user may want a fresh one today.
 

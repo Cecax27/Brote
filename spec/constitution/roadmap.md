@@ -85,22 +85,22 @@ What: Measure ambient light via camera lux estimation and get placement advice.
 All AI features are served by the **brote-agent** — a separate Python + Gemini service deployed on Google Cloud Run. The app never holds a Gemini key; the agent owns it. The app talks to the agent over HTTP at a configurable URL (`EXPO_PUBLIC_BROTE_AGENT_URL`):
 
 - `GET /health` → `{ "status": "ok" }`
-- `POST /chat` with `{ "message": string (1–2000 chars) }` → `{ "reply": string }`
-- Error envelope `{ "error": { "code", "message" } }` — `VALIDATION_ERROR` (422), `UPSTREAM_ERROR` (502), `INTERNAL_ERROR` (500)
+- `POST /chat` with `{ "message": string (1–2000 chars), "plant_id"?: string }` + `Authorization: Bearer <supabase-jwt>` → `{ "reply": string }`
+- Error envelope `{ "error": { "code", "message" } }` — `UNAUTHORIZED` (401), `VALIDATION_ERROR` (422), `UPSTREAM_ERROR` (502), `INTERNAL_ERROR` (500)
 
-Conversations and messages persist on the app side in Supabase (`ai_conversations`, `ai_messages`); the agent is stateless. The agent API is in progress, so the foundation (chat UI, persistence, Flora avatar, typed agent client) is built against this contract first, with live `/chat` wiring landing once the agent is up. How plant context reaches the agent (extend the contract with a `context` field vs. embed in `message`) and how the app authenticates to the agent are pinned in the `008-ai-foundation` spec.
+Conversations and messages persist on the app side in Supabase (`ai_conversations`, `ai_messages`); the agent is stateless. The agent contract is finalized: the app authenticates with the Supabase session JWT and forwards the rooted conversation's `plant_id` (omitted for a general chat) — brote-agent fetches plant context (info, journal, schedule) **server-side** as the user, so no context blob is built or cached in the bundle. `008` shipped the foundation (chat UI, persistence, Flora avatar, typed agent client) against this contract; live `/chat` wiring lands once the agent is up (mock path covers the gap until then). The `008-ai-foundation` spec pins the details.
 
 ### 008-ai-foundation
 What: AI infrastructure, Flora avatar, chat UI, and message persistence.
-- [ ] brote-agent client — typed wrapper at `EXPO_PUBLIC_BROTE_AGENT_URL` (`getHealth()` → `/health`, `postChat(message)` → `/chat`); typed error handling for `VALIDATION_ERROR` / `UPSTREAM_ERROR` / `INTERNAL_ERROR`; mockable so UI ships before the agent is live
-- [ ] Database migration — `ai_conversations` table (id, user_id, plant_id?, title, created_at)
-- [ ] Database migration — `ai_messages` table (id, conversation_id, role, content, photo_url?, created_at)
-- [ ] Flora AI companion avatar — visual identity per brote-visual-guide, using illustrations in `assets/images/illustrations/Flora/`
-- [ ] Chat UI — message bubbles, typing indicator, plant context header
-- [ ] Chat list — per-plant conversations, starting a new chat
-- [ ] Context builder — gathers plant info + recent journal entries to send to the agent (shape pinned to the finalized agent contract)
-- [ ] Message persistence — save every message, resume conversations
-- [ ] Loading / empty / error states
+- [x] brote-agent client — typed wrapper at `EXPO_PUBLIC_BROTE_AGENT_URL` (`getHealth()` → `/health`, `postChat({ message, plant_id?, accessToken })` → `/chat`); typed error handling for `UNAUTHORIZED` / `VALIDATION_ERROR` / `UPSTREAM_ERROR` / `INTERNAL_ERROR` / `NETWORK`; mockable so UI ships before the agent is live
+- [x] Database migration — `ai_conversations` table (id, user_id, plant_id?, title, created_at, updated_at) + RLS + indexes + `set_updated_at` trigger
+- [x] Database migration — `ai_messages` table (id, conversation_id, role, content, photo_url?, created_at) + RLS (owner-scoped via parent conversation)
+- [x] Flora AI companion avatar — visual identity per brote-visual-guide, using illustrations in `assets/images/illustrations/Flora/`
+- [x] Chat UI — message bubbles, typing indicator, plant context header
+- [x] Chat list — per-plant conversations, starting a new chat
+- [x] Plant context — forward `plant_id` to the agent; agent fetches context server-side with the bearer JWT (no client-side context builder, no `PlantContext`)
+- [x] Message persistence — save every message, resume conversations
+- [x] Loading / empty / error states
 
 ### 009-plant-identification
 What: Identify plant species from a photo using the agent's vision model.
