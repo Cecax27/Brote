@@ -1,5 +1,7 @@
 import { Stack, router } from "expo-router";
 import { useEffect } from "react";
+import { Pressable } from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/theme";
 
@@ -80,6 +82,18 @@ export default function AppLayout() {
         options={{
           title: "Flora",
           headerBackTitle: "Volver",
+          headerRight: () => (
+            <Pressable
+              onPress={() => router.push("/chat/new" as never)}
+              hitSlop={8}
+            >
+              <MaterialCommunityIcons
+                name="plus-circle-outline"
+                size={24}
+                color={colors.text.secondary}
+              />
+            </Pressable>
+          ),
         }}
       />
       <Stack.Screen
