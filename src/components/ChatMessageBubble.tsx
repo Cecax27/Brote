@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet } from "react-native";
 import { useTheme } from "@/theme";
 import { FloraAvatar } from "@/components/FloraAvatar";
-import type { AgentMessage } from "@/lib/agent";
+import type { AgentMessage, ProposedAction } from "@/lib/agent";
 
 export interface ChatMessage {
   id: string;
@@ -9,6 +9,9 @@ export interface ChatMessage {
   content: string;
   created_at: string;
   photo_url: string | null;
+  proposed_action?: ProposedAction | null;
+  action_status?: "idle" | "executing" | "executed" | "rejected" | "error";
+  action_error?: string;
 }
 
 type Props = {

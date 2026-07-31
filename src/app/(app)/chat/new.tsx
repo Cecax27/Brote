@@ -66,19 +66,28 @@ export default function NewChatScreen() {
         accessToken: session?.access_token ?? "",
       });
 
+      const preloadedMessages: ChatMessage[] = [userMsg];
+
       const asstMsg: ChatMessage = {
         id: optimisticId(),
         role: "assistant",
         content: response.reply,
         created_at: new Date().toISOString(),
         photo_url: null,
+        proposed_action: response.proposed_action ?? null,
+        action_status: response.proposed_action ? "idle" : undefined,
       };
+      preloadedMessages.push(asstMsg);
 
       setMessages((prev) => [...prev, asstMsg]);
 
       router.replace({
         pathname: "/chat/[id]",
-        params: { id: response.conversation_id },
+        params: {
+          id: response.conversation_id,
+          preload: JSON.stringify(preloadedMessages),
+          preloadPlantId: plantId ?? "",
+        },
       } as never);
     } catch (err) {
       if (err instanceof AgentError) {
