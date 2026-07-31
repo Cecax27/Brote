@@ -1,10 +1,18 @@
 import { Text, View, StyleSheet } from "react-native";
 import { useTheme } from "@/theme";
 import { FloraAvatar } from "@/components/FloraAvatar";
-import type { ConversationMessage } from "@/lib/supabase/ai-messages";
+import type { AgentMessage } from "@/lib/agent";
+
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  created_at: string;
+  photo_url: string | null;
+}
 
 type Props = {
-  message: ConversationMessage;
+  message: AgentMessage | ChatMessage;
 };
 
 export function ChatMessageBubble({ message }: Props) {

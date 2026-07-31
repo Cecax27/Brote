@@ -4,38 +4,35 @@ import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/theme";
 import { ChatContextHeader } from "@/components/ChatContextHeader";
-import { ChatMessageBubble } from "@/components/ChatMessageBubble";
+import { ChatMessageBubble, type ChatMessage } from "@/components/ChatMessageBubble";
 import { ChatInput } from "@/components/ChatInput";
 import { FloraTypingIndicator } from "@/components/FloraTypingIndicator";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { EmptyState } from "@/components/EmptyState";
-import { getAgent, AgentError } from "@/lib/agent";
-import {
-  fetchConversation,
-  updateConversation,
-  type ConversationWithPlant,
-} from "@/lib/supabase/ai-conversations";
-import {
-  fetchMessages,
-  createMessage,
-  type ConversationMessage,
-} from "@/lib/supabase/ai-messages";
-
-type OptimisticMessage = Omit<ConversationMessage, "id"> & {
-  id: string;
-};
+import { fetchPlant, type Plant } from "@/lib/supabase/plants";
+import { getAgent, AgentError, type AgentMessage } from "@/lib/agent";
 
 function optimisticId(): string {
   return `opt_${Math.random().toString(36).slice(2, 11)}`;
+}
+
+function toChatMessage(msg: AgentMessage): ChatMessage {
+  return {
+    id: optimisticId(),
+    role: msg.role,
+    content: msg.content,
+    created_at: msg.created_at,
+    photo_url: msg.photo_url,
+  };
 }
 
 export default function ConversationScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { session } = useAuth();
   const { colors, spacing } = useTheme();
-  const [conversation, setConversation] =
-    useState<ConversationWithPlant | null>(null);
-  const [messages, setMessages] = useState<ConversationMessage[]>([]);
+  const [plantId, setPlantId] = useState<string | null>(null);
+  const [plant, setPlant] = useState<Plant | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isTyping, setIsTyping] = useState(false);
   const [inputError, setInputError] = useState<string | null>(null);
@@ -44,18 +41,35 @@ export default function ConversationScreen() {
     if (!id) return;
     setIsLoading(true);
     try {
-      const [conv, msgs] = await Promise.all([
-        fetchConversation(id),
-        fetchMessages(id),
+      const accessToken = session?.access_token ?? "";
+
+      const [convsData, msgsData] = await Promise.all([
+        getAgent().fetchConversations(accessToken),
+        getAgent().fetchMessages(id, accessToken),
       ]);
-      setConversation(conv);
-      setMessages(msgs);
+
+      const conv = convsData.find((c) => c.conversation_id === id);
+      if (conv) {
+        setPlantId(conv.plant_id);
+      }
+
+      const chatMessages: ChatMessage[] = msgsData.map(toChatMessage);
+      setMessages(chatMessages);
+
+      if (conv?.plant_id) {
+        try {
+          const p = await fetchPlant(conv.plant_id);
+          setPlant(p);
+        } catch {
+          setPlant(null);
+        }
+      }
     } catch {
       // Silently fail
     } finally {
       setIsLoading(false);
     }
-  }, [id]);
+  }, [id, session?.access_token]);
 
   useFocusEffect(
     useCallback(() => {
@@ -67,51 +81,34 @@ export default function ConversationScreen() {
     if (!text.trim() || isTyping || !id) return;
     setInputError(null);
 
-    const userMsg: OptimisticMessage = {
+    const userMsg: ChatMessage = {
       id: optimisticId(),
-      conversation_id: id,
       role: "user",
       content: text,
       created_at: new Date().toISOString(),
       photo_url: null,
     };
 
-    setMessages((prev) => [...prev, userMsg as ConversationMessage]);
+    setMessages((prev) => [...prev, userMsg]);
     setIsTyping(true);
 
     try {
-      await createMessage({
-        conversation_id: id,
-        role: "user",
-        content: text,
-      });
-
-      const reply = await getAgent().postChat({
+      const response = await getAgent().postChat({
         message: text,
-        plant_id: conversation?.plant_id ?? null,
+        conversation_id: id,
+        plant_id: plantId ?? null,
         accessToken: session?.access_token ?? "",
       });
 
-      const asstMsg = await createMessage({
-        conversation_id: id,
+      const asstMsg: ChatMessage = {
+        id: optimisticId(),
         role: "assistant",
-        content: reply,
-      });
+        content: response.reply,
+        created_at: new Date().toISOString(),
+        photo_url: null,
+      };
 
       setMessages((prev) => [...prev, asstMsg]);
-
-      if (
-        conversation &&
-        conversation.title === "Conversación con Flora" &&
-        messages.length === 0
-      ) {
-        const title =
-          text.length > 30 ? text.slice(0, 30) + "…" : text;
-        const updated = await updateConversation(id, { title });
-        setConversation((prev) =>
-          prev ? { ...prev, title: updated.title } : prev,
-        );
-      }
     } catch (err) {
       if (err instanceof AgentError) {
         setInputError(err.message);
@@ -142,9 +139,7 @@ export default function ConversationScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      {conversation?.plant_id && conversation.plants && (
-        <ChatContextHeader plant={conversation.plants} />
-      )}
+      {plant && <ChatContextHeader plant={plant} />}
 
       {messages.length === 0 ? (
         <View style={{ flex: 1 }}>

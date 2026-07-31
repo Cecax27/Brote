@@ -25,4 +25,16 @@ export function resetAgent(): void {
 
 export { AgentError } from "./client";
 export { MockAgentClient } from "./mock";
-export type { AgentClient, AgentChatInput } from "./client";
+export type {
+  AgentClient,
+  AgentChatInput,
+  AgentMessage,
+  ChatResponse,
+  ConversationListItem,
+  ProposedAction,
+  VisionRequest,
+  ExecuteActionInput,
+  ExecuteActionResponse,
+  CreateConversationInput,
+  CreateConversationResponse,
+} from "./client";

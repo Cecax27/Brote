@@ -9,20 +9,16 @@ import {
 import { router, useFocusEffect } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTheme } from "@/theme";
+import { useAuth } from "@/context/auth";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { EmptyState } from "@/components/EmptyState";
 import { FloraAvatar } from "@/components/FloraAvatar";
-import {
-  fetchConversations,
-  type ConversationWithPlant,
-} from "@/lib/supabase/ai-conversations";
-import {
-  fetchMessages,
-} from "@/lib/supabase/ai-messages";
+import { getAgent, type ConversationListItem } from "@/lib/agent";
 
 export default function ChatListScreen() {
   const { colors, type, spacing, radii } = useTheme();
-  const [conversations, setConversations] = useState<ConversationWithPlant[]>(
+  const { session } = useAuth();
+  const [conversations, setConversations] = useState<ConversationListItem[]>(
     [],
   );
   const [previews, setPreviews] = useState<Record<string, string>>({});
@@ -31,23 +27,27 @@ export default function ChatListScreen() {
   const loadConversations = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await fetchConversations();
+      const accessToken = session?.access_token ?? "";
+      const data = await getAgent().fetchConversations(accessToken);
       setConversations(data);
 
       const previewMap: Record<string, string> = {};
       await Promise.all(
         data.map(async (conv) => {
           try {
-            const msgs = await fetchMessages(conv.id);
+            const msgs = await getAgent().fetchMessages(
+              conv.conversation_id,
+              accessToken,
+            );
             if (msgs.length > 0) {
               const last = msgs[msgs.length - 1];
-              previewMap[conv.id] =
+              previewMap[conv.conversation_id] =
                 last.content.length > 60
                   ? last.content.slice(0, 60) + "…"
                   : last.content;
             }
           } catch {
-            previewMap[conv.id] = "";
+            previewMap[conv.conversation_id] = "";
           }
         }),
       );
@@ -57,7 +57,7 @@ export default function ChatListScreen() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [session?.access_token]);
 
   useFocusEffect(
     useCallback(() => {
@@ -104,12 +104,12 @@ export default function ChatListScreen() {
         </View>
       ) : (
         conversations.map((conv) => {
-          const hasPlant = conv.plant_id && conv.plants;
-          const preview = previews[conv.id] ?? "";
+          const hasPlant = conv.plant_id !== null;
+          const preview = previews[conv.conversation_id] ?? "";
 
           return (
             <Pressable
-              key={conv.id}
+              key={conv.conversation_id}
               style={[
                 styles.row,
                 {
@@ -120,7 +120,7 @@ export default function ChatListScreen() {
               onPress={() =>
                 router.push({
                   pathname: "/chat/[id]",
-                  params: { id: conv.id },
+                  params: { id: conv.conversation_id },
                 } as never)
               }
             >

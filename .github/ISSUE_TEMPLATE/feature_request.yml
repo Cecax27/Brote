@@ -1,0 +1,49 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an idea for Brote. Before submitting, check the [design principles](https://github.com/anomalyco/Brote/blob/main/AGENTS.md#design-principles) — we evaluate every feature against whether it makes plant care simpler and more enjoyable.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the problem or need this feature would address.
+      placeholder: "I often forget to check if my plants need fertilizing..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe what you'd like to see implemented.
+      placeholder: "It would be great if the home screen showed upcoming fertilization tasks..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any alternative solutions or workarounds you've thought about.
+
+  - type: checkboxes
+    id: principles
+    attributes:
+      label: Design principles check
+      description: Does this idea align with the following?
+      options:
+        - label: It makes caring for plants simpler
+        - label: It reduces the user's uncertainty
+        - label: It helps the user enjoy their plants more
+        - label: It keeps the interface simple
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Screenshots, sketches, or any other details that help explain the idea.

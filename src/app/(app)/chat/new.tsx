@@ -4,27 +4,13 @@ import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/theme";
 import { ChatContextHeader } from "@/components/ChatContextHeader";
-import { ChatMessageBubble } from "@/components/ChatMessageBubble";
+import { ChatMessageBubble, type ChatMessage } from "@/components/ChatMessageBubble";
 import { ChatInput } from "@/components/ChatInput";
 import { FloraTypingIndicator } from "@/components/FloraTypingIndicator";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { EmptyState } from "@/components/EmptyState";
 import { fetchPlant, type Plant } from "@/lib/supabase/plants";
 import { getAgent, AgentError } from "@/lib/agent";
-import { createConversation } from "@/lib/supabase/ai-conversations";
-import {
-  createMessage,
-  type ConversationMessage,
-} from "@/lib/supabase/ai-messages";
-
-type OptimisticMessage = {
-  id: string;
-  conversation_id: string;
-  role: "user" | "assistant";
-  content: string;
-  created_at: string;
-  photo_url: string | null;
-};
 
 function optimisticId(): string {
   return `opt_${Math.random().toString(36).slice(2, 11)}`;
@@ -35,7 +21,7 @@ export default function NewChatScreen() {
   const { session } = useAuth();
   const { colors, spacing } = useTheme();
   const [plant, setPlant] = useState<Plant | null>(null);
-  const [messages, setMessages] = useState<OptimisticMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [inputError, setInputError] = useState<string | null>(null);
   const [isLoadingPlant, setIsLoadingPlant] = useState(!!plantId);
@@ -62,9 +48,8 @@ export default function NewChatScreen() {
     if (!text.trim() || isTyping) return;
     setInputError(null);
 
-    const userMsg: OptimisticMessage = {
+    const userMsg: ChatMessage = {
       id: optimisticId(),
-      conversation_id: "",
       role: "user",
       content: text,
       created_at: new Date().toISOString(),
@@ -75,57 +60,25 @@ export default function NewChatScreen() {
     setIsTyping(true);
 
     try {
-      const conv = await createConversation({
-        plant_id: plantId ?? null,
-      });
-
-      const { id: convId } = conv;
-
-      userMsg.conversation_id = convId;
-
-      await createMessage({
-        conversation_id: convId,
-        role: "user",
-        content: text,
-      });
-
-      const reply = await getAgent().postChat({
+      const response = await getAgent().postChat({
         message: text,
         plant_id: plantId ?? null,
         accessToken: session?.access_token ?? "",
       });
 
-      const asstMsg: OptimisticMessage = {
+      const asstMsg: ChatMessage = {
         id: optimisticId(),
-        conversation_id: convId,
         role: "assistant",
-        content: reply,
+        content: response.reply,
         created_at: new Date().toISOString(),
         photo_url: null,
       };
 
-      await createMessage({
-        conversation_id: convId,
-        role: "assistant",
-        content: reply,
-      });
-
       setMessages((prev) => [...prev, asstMsg]);
-
-      const title =
-        text.length > 30 ? text.slice(0, 30) + "…" : text;
-      try {
-        const { updateConversation } = await import(
-          "@/lib/supabase/ai-conversations"
-        );
-        await updateConversation(convId, { title });
-      } catch {
-        // Title update is best-effort
-      }
 
       router.replace({
         pathname: "/chat/[id]",
-        params: { id: convId },
+        params: { id: response.conversation_id },
       } as never);
     } catch (err) {
       if (err instanceof AgentError) {
@@ -172,10 +125,7 @@ export default function NewChatScreen() {
           contentContainerStyle={styles.messageListContent}
         >
           {messages.map((msg) => (
-            <ChatMessageBubble
-              key={msg.id}
-              message={msg as ConversationMessage}
-            />
+            <ChatMessageBubble key={msg.id} message={msg} />
           ))}
           <FloraTypingIndicator isTyping={isTyping} />
         </ScrollView>

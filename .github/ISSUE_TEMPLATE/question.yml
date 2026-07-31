@@ -1,0 +1,23 @@
+name: Question
+description: Ask a question about Brote
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before asking, please check the [README](https://github.com/anomalyco/Brote/blob/main/README.md) and existing issues to see if your question has already been answered.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: What would you like to know?
+      placeholder: "I'm wondering how..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Any relevant details that help frame the question.
