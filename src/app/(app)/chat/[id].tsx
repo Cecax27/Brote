@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { ScrollView, View, StyleSheet } from "react-native";
+import { ScrollView, View, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/theme";
@@ -138,7 +138,11 @@ export default function ConversationScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: colors.background }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : undefined}
+    >
       {plant && <ChatContextHeader plant={plant} />}
 
       {messages.length === 0 ? (
@@ -153,6 +157,7 @@ export default function ConversationScreen() {
         <ScrollView
           style={styles.messageList}
           contentContainerStyle={styles.messageListContent}
+          keyboardDismissMode="interactive"
         >
           {messages.map((msg) => (
             <ChatMessageBubble key={msg.id} message={msg} />
@@ -169,7 +174,7 @@ export default function ConversationScreen() {
         disabled={isTyping}
         error={inputError}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
