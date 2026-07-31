@@ -21,16 +21,16 @@ function TypingLeaf({ delay }: { delay: number }) {
   const opacity = useSharedValue(0.2);
 
   useEffect(() => {
-    opacity.value = withRepeat(
-      withDelay(
-        delay,
+    opacity.value = withDelay(
+      delay,
+      withRepeat(
         withTiming(1, {
           duration: motion.duration.slow,
           easing: Easing.inOut(Easing.ease),
         }),
+        -1,
+        true,
       ),
-      -1,
-      true,
     );
   }, [opacity, delay, motion.duration.slow]);
 
