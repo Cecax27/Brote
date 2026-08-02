@@ -42,7 +42,11 @@
       [
         "expo-notifications",
         {
-          "enableNotificationResponseListeners": true
+          "enableNotificationResponseListeners": true,
+          "icon": "./assets/images/android-icon-foreground.png",
+          "color": "#ffffff",
+          "defaultChannel": "default",
+          "enableBackgroundRemoteNotifications": true
         }
       ]
     ],

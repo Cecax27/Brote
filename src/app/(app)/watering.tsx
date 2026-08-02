@@ -12,7 +12,6 @@ import {
   fetchUpcomingSchedules,
   type WateringScheduleWithPlant,
 } from "@/lib/supabase/watering-schedules";
-import { reconcileWateringNotifications } from "@/lib/notifications";
 
 const MONTHS = [
   "ene", "feb", "mar", "abr", "may", "jun",
@@ -102,7 +101,6 @@ export default function AgendaScreen() {
           const expanded = expandOccurrences(schedules);
           setOccurrences(expanded);
           setHasData(schedules.length > 0);
-          reconcileWateringNotifications(schedules);
         })
         .catch(() => {
           if (!cancelled) setHasData(false);

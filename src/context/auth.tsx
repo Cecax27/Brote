@@ -1,7 +1,9 @@
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import type { ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
+import { Platform } from "react-native";
 import { supabase } from "@/lib/supabase/client";
+import { checkNotificationPermissions } from "@/lib/notifications";
 
 function translateError(error: unknown): string {
   if (error instanceof Error) {
@@ -25,10 +27,14 @@ function translateError(error: unknown): string {
   return "Algo salió mal. Inténtalo de nuevo.";
 }
 
+type NotificationPermissions = "undetermined" | "granted" | "denied";
+
 type AuthContextValue = {
   session: Session | null;
   user: User | null;
   isLoading: boolean;
+  notificationPermission: NotificationPermissions;
+  refreshNotificationPermission: () => Promise<void>;
   signIn: (params: { email: string; password: string }) => Promise<void>;
   signUp: (params: {
     email: string;
@@ -45,6 +51,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [notificationPermission, setNotificationPermission] =
+    useState<NotificationPermissions>("undetermined");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -64,6 +72,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       subscription.unsubscribe();
     };
   }, []);
+
+  const refreshNotificationPermission = useCallback(async () => {
+    if (Platform.OS === "web") {
+      setNotificationPermission("denied");
+      return;
+    }
+    try {
+      const granted = await checkNotificationPermissions();
+      setNotificationPermission(granted ? "granted" : "denied");
+    } catch {
+      setNotificationPermission("denied");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (session) {
+      refreshNotificationPermission();
+    }
+  }, [session, refreshNotificationPermission]);
 
   const signIn = useCallback(
     async ({ email, password }: { email: string; password: string }) => {
@@ -97,9 +124,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const signOut = useCallback(async () => {
+    try {
+      await supabase.from("push_tokens").delete().eq("user_id", user?.id);
+    } catch {
+      // Best effort cleanup
+    }
     const { error } = await supabase.auth.signOut();
+    setNotificationPermission("undetermined");
     if (error) throw new Error(translateError(error));
-  }, []);
+  }, [user]);
 
   const resetPassword = useCallback(async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -114,6 +147,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         session,
         user,
         isLoading,
+        notificationPermission,
+        refreshNotificationPermission,
         signIn,
         signUp,
         signOut,

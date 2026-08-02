@@ -12,9 +12,8 @@ import {
   createWateringSchedule,
   updateWateringSchedule,
   deleteWateringSchedule,
-  fetchUpcomingSchedules,
 } from "@/lib/supabase/watering-schedules";
-import { requestNotificationPermissions, reconcileWateringNotifications } from "@/lib/notifications";
+import { requestNotificationPermissions } from "@/lib/notifications";
 import type { WateringSchedule } from "@/lib/supabase/watering-schedules";
 
 export default function WateringScreen() {
@@ -100,9 +99,6 @@ export default function WateringScreen() {
         });
       }
 
-      const schedules = await fetchUpcomingSchedules();
-      await reconcileWateringNotifications(schedules);
-
       router.back();
     } catch (e) {
       setSaveError(
@@ -126,8 +122,6 @@ export default function WateringScreen() {
           onPress: async () => {
             try {
               await deleteWateringSchedule(existing.id);
-              const schedules = await fetchUpcomingSchedules();
-              await reconcileWateringNotifications(schedules);
               router.back();
             } catch {
               Alert.alert("Error", "No se pudo eliminar el recordatorio. Inténtalo de nuevo.");

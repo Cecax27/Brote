@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { ScrollView, Text, View, StyleSheet } from "react-native";
+import { ScrollView, Text, View, StyleSheet, Platform } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/theme";
@@ -9,10 +9,12 @@ import { Button } from "@/components/Button";
 import { Illustration } from "@/components/Illustration";
 import { PlantCard } from "@/components/PlantCard";
 import { WateringDueSection } from "@/components/WateringDueSection";
+import { NotificationPermissionBanner } from "@/components/NotificationPermissionBanner";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { fetchPlants } from "@/lib/supabase/plants";
-import { fetchDueToday, fetchUpcomingSchedules } from "@/lib/supabase/watering-schedules";
-import { reconcileWateringNotifications } from "@/lib/notifications";
+import { fetchDueToday } from "@/lib/supabase/watering-schedules";
+import { requestNotificationPermissions } from "@/lib/notifications";
+import { getExpoPushToken, registerPushToken } from "@/lib/supabase/push-tokens";
 import type { Plant } from "@/lib/supabase/plants";
 import type { WateringScheduleWithPlant } from "@/lib/supabase/watering-schedules";
 
@@ -24,11 +26,13 @@ function greetingByTime(): string {
 }
 
 export default function HomeScreen() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, notificationPermission, refreshNotificationPermission } = useAuth();
   const { colors, spacing, type } = useTheme();
   const [plants, setPlants] = useState<Plant[]>([]);
   const [dueToday, setDueToday] = useState<WateringScheduleWithPlant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showPermissionBanner, setShowPermissionBanner] = useState(false);
+  const [hasCheckedPermission, setHasCheckedPermission] = useState(false);
 
   const displayName = (user?.user_metadata?.display_name as string) || "";
   const firstName = displayName.split(" ")[0];
@@ -39,7 +43,6 @@ export default function HomeScreen() {
       const data = await fetchPlants();
       setPlants(data);
     } catch {
-      // Silently fail — user still sees empty state
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +53,6 @@ export default function HomeScreen() {
       const data = await fetchDueToday();
       setDueToday(data);
     } catch {
-      // Silently fail
     }
   }, []);
 
@@ -63,9 +65,49 @@ export default function HomeScreen() {
     useCallback(() => {
       loadPlants();
       loadDueToday();
-      fetchUpcomingSchedules().then(reconcileWateringNotifications).catch(() => {});
-    }, [loadPlants, loadDueToday]),
+      refreshNotificationPermission();
+    }, [loadPlants, loadDueToday, refreshNotificationPermission]),
   );
+
+  useEffect(() => {
+    if (Platform.OS === "web") return;
+
+    if (!hasCheckedPermission && notificationPermission !== "undetermined") {
+      setHasCheckedPermission(true);
+      if (notificationPermission === "denied") {
+        setShowPermissionBanner(true);
+      }
+      return;
+    }
+
+    async function handleFirstTime() {
+      if (hasCheckedPermission) return;
+
+      const granted = await requestNotificationPermissions();
+      setHasCheckedPermission(true);
+
+      if (granted) {
+        const token = await getExpoPushToken();
+        if (token) {
+          await registerPushToken(token);
+        }
+      } else {
+        setShowPermissionBanner(true);
+      }
+
+      await refreshNotificationPermission();
+    }
+
+    handleFirstTime();
+  }, [notificationPermission, hasCheckedPermission, refreshNotificationPermission]);
+
+  useEffect(() => {
+    if (notificationPermission === "granted") {
+      getExpoPushToken().then((token) => {
+        if (token) registerPushToken(token);
+      }).catch(() => {});
+    }
+  }, [notificationPermission]);
 
   const hasPlants = plants.length > 0;
 
@@ -246,6 +288,15 @@ export default function HomeScreen() {
           </View>
         </View>
       </View>
+
+      {/* Notification permission banner */}
+      {showPermissionBanner && (
+        <View style={{ marginTop: spacing.xl }}>
+          <NotificationPermissionBanner
+            onDismiss={() => setShowPermissionBanner(false)}
+          />
+        </View>
+      )}
 
       {/* Logout — subtle placement */}
       <View style={{ marginTop: spacing.xxl, alignItems: "center" }}>

@@ -13,8 +13,8 @@ import { JournalSection } from "@/components/JournalSection";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { fetchPlant, deletePlant, fetchPlantPhotos } from "@/lib/supabase/plants";
 import { fetchJournalEntries } from "@/lib/supabase/journal-entries";
-import { fetchWateringSchedule, fetchUpcomingSchedules } from "@/lib/supabase/watering-schedules";
-import { reconcileWateringNotifications } from "@/lib/notifications";
+import { fetchWateringSchedule } from "@/lib/supabase/watering-schedules";
+
 import { WaterNowButton } from "@/components/WaterNowButton";
 import type { Plant } from "@/lib/supabase/plants";
 import type { JournalEntry } from "@/lib/supabase/journal-entries";
@@ -315,7 +315,6 @@ export default function PlantDetailScreen() {
                       onWatered={(s) => {
                         if (s) setSchedule(s);
                         loadSchedule();
-                        fetchUpcomingSchedules().then(reconcileWateringNotifications);
                       }}
                     />
                   </View>
