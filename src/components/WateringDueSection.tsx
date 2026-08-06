@@ -42,23 +42,25 @@ export function WateringDueSection({ items }: Props) {
   if (items.length === 0) return null;
 
   return (
-    <View style={{ gap: 12 }}>
+    <View style={{ gap: 12, padding: 10, borderRadius: 14, boxShadow: [{
+      offsetX: 0,
+      offsetY: 0,
+      blurRadius: 4,
+      spreadDistance: 0, // Set to positive/negative to change shadow size
+      color: 'rgba(200, 196, 185, 0.25)',
+      inset: false, // Set to true for internal shadows
+    }], margin: -10}}>
       <View style={styles.header}>
         <Text
           style={{
             fontFamily: type.h3.fontFamily,
             fontSize: type.h3.size,
             fontWeight: "600",
-            color: colors.text.primary,
+            color: colors.primary,
           }}
         >
-          Hoy
+          Hoy tienes por hacer
         </Text>
-        <MaterialCommunityIcons
-          name="watering-can-outline"
-          size={18}
-          color={colors.text.secondary}
-        />
       </View>
 
       {items.map((item) => {

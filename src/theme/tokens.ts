@@ -25,9 +25,9 @@ export const lightColors = {
   earth: "#C7A47B",
   text: {
     /** Brown-black — body text. Never pure #000. (#3F3A36 on #F8F6F2 ≈ 10.4:1 AA) */
-    primary: "#3F3A36",
+    primary: "#12100e",
     /** Warm gray — secondary copy. */
-    secondary: "#7B756E",
+    secondary: "#93877a",
   },
   accent: {
     /** Mustard — small highlight details only. */
@@ -128,13 +128,13 @@ export const typeScale: Record<string, TypeSize> = {
   display: {
     size: 32,
     lineHeight: 40,
-    fontFamily: fontFamilies.headingSemiBold,
+    fontFamily: fontFamilies.headingRegular,
     fontWeight: "600",
   },
   h1: {
     size: 26,
     lineHeight: 32,
-    fontFamily: fontFamilies.headingSemiBold,
+    fontFamily: fontFamilies.headingRegular,
     fontWeight: "600",
   },
   h2: {
@@ -144,9 +144,9 @@ export const typeScale: Record<string, TypeSize> = {
     fontWeight: "400",
   },
   h3: {
-    size: 18,
+    size: 16,
     lineHeight: 24,
-    fontFamily: fontFamilies.headingSemiBold,
+    fontFamily: fontFamilies.headingRegular,
     fontWeight: "600",
   },
   body: {
@@ -162,7 +162,7 @@ export const typeScale: Record<string, TypeSize> = {
     fontWeight: "500",
   },
   bodySmall: {
-    size: 14,
+    size: 12,
     lineHeight: 20,
     fontFamily: fontFamilies.body,
     fontWeight: "400",

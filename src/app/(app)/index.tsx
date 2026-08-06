@@ -17,10 +17,12 @@ import { requestNotificationPermissions } from "@/lib/notifications";
 import { getExpoPushToken, registerPushToken } from "@/lib/supabase/push-tokens";
 import type { Plant } from "@/lib/supabase/plants";
 import type { WateringScheduleWithPlant } from "@/lib/supabase/watering-schedules";
+import { Image } from "expo-image";
 
 function greetingByTime(): string {
   const hour = new Date().getHours();
-  if (hour < 12) return "Buenos días";
+  if (hour < 5) return "Buenas noches";
+  if (hour > 5 && hour < 12) return "Buenos días";
   if (hour < 19) return "Buenas tardes";
   return "Buenas noches";
 }
@@ -37,6 +39,7 @@ export default function HomeScreen() {
   const displayName = (user?.user_metadata?.display_name as string) || "";
   const firstName = displayName.split(" ")[0];
   const greeting = greetingByTime();
+  const greeting_emojie = greeting == "Buenas noches" ? "🌑" : "☀️" ;
 
   const loadPlants = useCallback(async () => {
     try {
@@ -126,8 +129,8 @@ export default function HomeScreen() {
           style={[
             styles.brand,
             {
-              fontFamily: type.display.fontFamily,
-              fontSize: type.h2.size,
+              fontFamily: type.h2.fontFamily,
+              fontSize: type.h1.size,
               color: colors.primary,
             },
           ]}
@@ -155,41 +158,51 @@ export default function HomeScreen() {
       </View>
 
       {/* Greeting */}
-      <View style={{ marginTop: spacing.xl }}>
-        <Text
-          style={[
-            styles.greetingLabel,
-            {
-              fontFamily: type.body.fontFamily,
-              color: colors.text.secondary,
-            },
-          ]}
-        >
-          ¡{greeting}{firstName ? `, ${firstName}` : ""}! ☀️
-        </Text>
-        <Text
-          style={[
-            styles.greetingHeading,
-            {
-              fontFamily: type.display.fontFamily,
-              fontSize: type.display.size,
-              color: colors.text.primary,
-            },
-          ]}
-        >
-          Tu jardín está{"\n"}creciendo hermoso 🌿
-        </Text>
-        <Text
-          style={[
-            styles.greetingSub,
-            {
-              fontFamily: type.body.fontFamily,
-              color: colors.text.secondary,
-            },
-          ]}
-        >
-          Aquí tienes lo que necesita tu atención hoy.
-        </Text>
+      <View style={{ flexDirection: "row", width: "100%", marginTop: spacing.xl, gap:0 }}>
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <Text
+            style={[
+              styles.greetingLabel,
+              {
+                fontFamily: type.h2.fontFamily,
+                color: colors.text.secondary,
+              },
+            ]}
+          >
+            ¡{greeting}{firstName ? `, ${firstName}` : ""}! {greeting_emojie}
+          </Text>
+          <Text
+            style={[
+              styles.greetingHeading,
+              {
+                fontFamily: type.display.fontFamily,
+                fontSize: type.h1.size,
+                color: colors.text.primary,
+              },
+            ]}
+          >
+            Tu jardín está{"\n"}creciendo hermoso
+          </Text>
+          <Text
+            style={[
+              styles.greetingSub,
+              {
+                fontFamily: type.bodySmall.fontFamily,
+                color: colors.text.secondary,
+                fontSize: type.bodySmall.size
+              },
+            ]}
+          >
+            Aquí tienes lo que necesita tu atención hoy.
+          </Text>
+        </View>
+        <View style={{ marginLeft:-50, marginRight:-40, marginBottom:-50, marginTop:-30 }}>
+          <Image 
+          source={require("../../../assets/images/illustrations/A handmade ceramic flower pot with natural texture.png")}
+              style={styles.photo}
+              contentFit="cover"
+              transition={300}/>
+        </View>
       </View>
 
       {/* Due today — only visible when there are plants to water */}
@@ -314,9 +327,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  brand: { fontWeight: "700" },
+  brand: {  },
   greetingLabel: { fontSize: 16, marginBottom: 4 },
-  greetingHeading: { lineHeight: 40, marginBottom: 8 },
+  greetingHeading: { lineHeight: 32, marginBottom: 8 },
   greetingSub: { fontSize: 16, maxWidth: 250 },
   floraCard: {
     flexDirection: "row",
@@ -328,4 +341,8 @@ const styles = StyleSheet.create({
   floraLabel: { fontSize: 12, fontWeight: "600", letterSpacing: 1 },
   floraTitle: { fontWeight: "700", marginTop: 4 },
   floraSub: { fontSize: 12, marginTop: 4, lineHeight: 16 },
+  photo: {
+    width: 170,
+    height: 200
+  },
 });
