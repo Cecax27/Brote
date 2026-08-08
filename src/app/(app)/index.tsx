@@ -39,7 +39,7 @@ export default function HomeScreen() {
   const displayName = (user?.user_metadata?.display_name as string) || "";
   const firstName = displayName.split(" ")[0];
   const greeting = greetingByTime();
-  const greeting_emojie = greeting == "Buenas noches" ? "🌑" : "☀️" ;
+  const greeting_emojie = greeting === "Buenas noches" ? "🌑" : "☀️" ;
 
   const loadPlants = useCallback(async () => {
     try {
@@ -103,14 +103,6 @@ export default function HomeScreen() {
 
     handleFirstTime();
   }, [notificationPermission, hasCheckedPermission, refreshNotificationPermission]);
-
-  useEffect(() => {
-    if (notificationPermission === "granted") {
-      getExpoPushToken().then((token) => {
-        if (token) registerPushToken(token);
-      }).catch(() => {});
-    }
-  }, [notificationPermission]);
 
   const hasPlants = plants.length > 0;
 

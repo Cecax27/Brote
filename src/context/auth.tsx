@@ -4,6 +4,7 @@ import type { Session, User } from "@supabase/supabase-js";
 import { Platform } from "react-native";
 import { supabase } from "@/lib/supabase/client";
 import { checkNotificationPermissions } from "@/lib/notifications";
+import { getExpoPushToken, registerPushToken } from "@/lib/supabase/push-tokens";
 
 function translateError(error: unknown): string {
   if (error instanceof Error) {
@@ -81,6 +82,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const granted = await checkNotificationPermissions();
       setNotificationPermission(granted ? "granted" : "denied");
+      if (granted) {
+        const token = await getExpoPushToken();
+        if (token) await registerPushToken(token);
+      }
     } catch {
       setNotificationPermission("denied");
     }
@@ -91,6 +96,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       refreshNotificationPermission();
     }
   }, [session, refreshNotificationPermission]);
+
+  useEffect(() => {
+    if (notificationPermission === "granted" && Platform.OS !== "web") {
+      getExpoPushToken().then((token) => {
+        if (token) registerPushToken(token);
+      }).catch(() => {});
+    }
+  }, [notificationPermission]);
 
   const signIn = useCallback(
     async ({ email, password }: { email: string; password: string }) => {
