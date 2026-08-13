@@ -2,6 +2,7 @@ import { Stack, router } from "expo-router";
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider, useAuth } from "@/context/auth";
 import { ThemeProvider } from "@/theme";
 import { setupNotifications } from "@/lib/notifications";
@@ -45,12 +46,14 @@ function RootStack() {
 
   return (
     <ThemeProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: "fade",
-        }}
-      />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
 }

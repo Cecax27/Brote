@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, useRef } from "react";
 import { ScrollView, View, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/context/auth";
+import { useConversations, truncatePreview } from "@/context/conversations";
 import { useTheme } from "@/theme";
 import { ChatContextHeader } from "@/components/ChatContextHeader";
 import { ChatMessageBubble, type ChatMessage } from "@/components/ChatMessageBubble";
@@ -48,6 +49,7 @@ export default function ConversationScreen() {
   }>();
 
   const { session } = useAuth();
+  const { touchConversation } = useConversations();
   const { colors, spacing } = useTheme();
 
   const initialMessages = useMemo(
@@ -164,6 +166,8 @@ export default function ConversationScreen() {
       };
 
       setMessages((prev) => [...prev, asstMsg]);
+
+      touchConversation(id, truncatePreview(response.reply));
     } catch (err) {
       if (err instanceof AgentError) {
         setInputError(err.message);

@@ -1,6 +1,7 @@
 import { Stack, router } from "expo-router";
 import { useEffect } from "react";
 import { useAuth } from "@/context/auth";
+import { ConversationsProvider } from "@/context/conversations";
 import { useTheme } from "@/theme";
 
 export default function AppLayout() {
@@ -16,79 +17,81 @@ export default function AppLayout() {
   if (isLoading) return null;
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: true,
-        headerStyle: { backgroundColor: colors.background },
-        headerTintColor: colors.text.primary,
-        headerTitleStyle: {
-          fontFamily: type.h3.fontFamily,
-          fontSize: type.h3.size,
-          fontWeight: "600",
-        },
-        headerShadowVisible: false,
-        headerBackTitle: "Volver",
-        contentStyle: { backgroundColor: colors.background },
-        animation: "fade",
-      }}
-    >
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen
-        name="new-plant"
-        options={{
-          title: "Nueva planta",
-        }}
-      />
-      <Stack.Screen
-        name="plants/[id]/index"
-        options={{
-          title: "Planta",
-        }}
-      />
-      <Stack.Screen
-        name="plants/[id]/edit"
-        options={{
-          title: "Editar planta",
-        }}
-      />
-      <Stack.Screen
-        name="plants/[id]/new-entry"
-        options={{
-          title: "Nueva entrada",
-        }}
-      />
-      <Stack.Screen
-        name="plants/[id]/edit-entry"
-        options={{
-          title: "Editar entrada",
-        }}
-      />
-      <Stack.Screen
-        name="plants/[id]/watering"
-        options={{
-          title: "Recordatorio de riego",
-        }}
-      />
-      <Stack.Screen
-        name="watering"
-        options={{
-          title: "Riegos",
-        }}
-      />
-      <Stack.Screen
-        name="chat/new"
-        options={{
-          title: "Nuevo chat",
-          headerBackTitle: "Cerrar",
-        }}
-      />
-      <Stack.Screen
-        name="chat/[id]"
-        options={{
-          title: "Flora",
+    <ConversationsProvider>
+      <Stack
+        screenOptions={{
+          headerShown: true,
+          headerStyle: { backgroundColor: colors.background },
+          headerTintColor: colors.text.primary,
+          headerTitleStyle: {
+            fontFamily: type.h3.fontFamily,
+            fontSize: type.h3.size,
+            fontWeight: "600",
+          },
+          headerShadowVisible: false,
           headerBackTitle: "Volver",
+          contentStyle: { backgroundColor: colors.background },
+          animation: "fade",
         }}
-      />
-    </Stack>
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="new-plant"
+          options={{
+            title: "Nueva planta",
+          }}
+        />
+        <Stack.Screen
+          name="plants/[id]/index"
+          options={{
+            title: "Planta",
+          }}
+        />
+        <Stack.Screen
+          name="plants/[id]/edit"
+          options={{
+            title: "Editar planta",
+          }}
+        />
+        <Stack.Screen
+          name="plants/[id]/new-entry"
+          options={{
+            title: "Nueva entrada",
+          }}
+        />
+        <Stack.Screen
+          name="plants/[id]/edit-entry"
+          options={{
+            title: "Editar entrada",
+          }}
+        />
+        <Stack.Screen
+          name="plants/[id]/watering"
+          options={{
+            title: "Recordatorio de riego",
+          }}
+        />
+        <Stack.Screen
+          name="watering"
+          options={{
+            title: "Riegos",
+          }}
+        />
+        <Stack.Screen
+          name="chat/new"
+          options={{
+            title: "Nuevo chat",
+            headerBackTitle: "Cerrar",
+          }}
+        />
+        <Stack.Screen
+          name="chat/[id]"
+          options={{
+            title: "Flora",
+            headerBackTitle: "Volver",
+          }}
+        />
+      </Stack>
+    </ConversationsProvider>
   );
 }

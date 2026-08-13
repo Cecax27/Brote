@@ -42,6 +42,10 @@ export default function HomeScreen() {
     }
   }, []);
 
+  const handleWatered = useCallback((item: WateringScheduleWithPlant) => {
+    setDueToday((prev) => prev.filter((d) => d.id !== item.id));
+  }, []);
+
   useEffect(() => {
     loadDueToday();
   }, [loadDueToday]);
@@ -170,7 +174,7 @@ export default function HomeScreen() {
       {/* Due today — only visible when there are plants to water */}
       {dueToday.length > 0 && (
         <View style={{ marginTop: spacing.xl }}>
-          <WateringDueSection items={dueToday} />
+          <WateringDueSection items={dueToday} onWatered={handleWatered} />
         </View>
       )}
 

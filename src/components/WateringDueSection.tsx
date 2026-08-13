@@ -34,9 +34,10 @@ function statusLine(due: string): string {
 
 type Props = {
   items: WateringScheduleWithPlant[];
+  onWatered?: (item: WateringScheduleWithPlant) => void;
 };
 
-export function WateringDueSection({ items }: Props) {
+export function WateringDueSection({ items, onWatered }: Props) {
   const { colors, type } = useTheme();
 
   if (items.length === 0) return null;
@@ -120,7 +121,10 @@ export function WateringDueSection({ items }: Props) {
                   </Text>
                 </View>
               </View>
-              <WaterNowButton plant={plant} />
+              <WaterNowButton
+                plant={plant}
+                onWatered={() => onWatered?.(item)}
+              />
             </Card>
           </Pressable>
         );

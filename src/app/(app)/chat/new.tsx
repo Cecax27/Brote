@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { ScrollView, View, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/context/auth";
+import { useConversations, truncatePreview } from "@/context/conversations";
 import { useTheme } from "@/theme";
 import { ChatContextHeader } from "@/components/ChatContextHeader";
 import { ChatMessageBubble, type ChatMessage } from "@/components/ChatMessageBubble";
@@ -10,15 +11,20 @@ import { FloraTypingIndicator } from "@/components/FloraTypingIndicator";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { EmptyState } from "@/components/EmptyState";
 import { fetchPlant, type Plant } from "@/lib/supabase/plants";
-import { getAgent, AgentError } from "@/lib/agent";
+import { getAgent, AgentError, type ConversationListItem } from "@/lib/agent";
 
 function optimisticId(): string {
   return `opt_${Math.random().toString(36).slice(2, 11)}`;
 }
 
+function buildTitle(message: string): string {
+  return message.length > 30 ? message.slice(0, 30) + "…" : message;
+}
+
 export default function NewChatScreen() {
   const { plantId } = useLocalSearchParams<{ plantId?: string }>();
   const { session } = useAuth();
+  const { addConversation } = useConversations();
   const { colors, spacing } = useTheme();
   const [plant, setPlant] = useState<Plant | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -80,6 +86,16 @@ export default function NewChatScreen() {
       preloadedMessages.push(asstMsg);
 
       setMessages((prev) => [...prev, asstMsg]);
+
+      const now = new Date().toISOString();
+      const newConv: ConversationListItem = {
+        conversation_id: response.conversation_id,
+        title: buildTitle(text),
+        plant_id: plantId ?? null,
+        updated_at: now,
+        created_at: now,
+      };
+      addConversation(newConv, truncatePreview(response.reply));
 
       router.replace({
         pathname: "/chat/[id]",
