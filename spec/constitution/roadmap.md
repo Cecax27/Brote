@@ -156,6 +156,13 @@ What: Per-plant health status derived from care adherence, journal patterns, and
 - [ ] Health badge on plant card and plant detail — color-coded visual indicator
 - [ ] Health tips — AI-generated suggestions when status is needs_attention or critical
 
+### 016-polish-and-refinement
+What: Polish pass — bottom tab bar, settings screen, Flora tab, and Mi jardín. No new data model.
+- [x] Bottom tab bar — `Tabs` navigator under `(app)/(tabs)` with Inicio / Mi jardín / Flora / Ajustes
+- [x] Ajustes screen — profile card, "Cerrar sesión", external links (privacy, terms, blog, GitHub, bug guide)
+- [x] Flora tab — conversation list relocated to `/flora` (threads stay at `/chat/[id]`, new chat at `/chat/new`)
+- [x] Mi jardín — full plant list + floating action button; Inicio narrowed to the watering-due summary
+
 ## Backlog / Ideas
 
 - Native ambient light sensor (V2.0)

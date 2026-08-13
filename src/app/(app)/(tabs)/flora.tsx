@@ -163,32 +163,45 @@ export default function ChatListScreen() {
     [handleDelete, handleStartRename],
   );
 
-  if (isLoading) {
-    return (
-      <ScrollView
-        style={{ flex: 1, backgroundColor: colors.background }}
-        contentContainerStyle={{
-          padding: spacing.lg,
-          gap: spacing.md,
-        }}
-      >
-        <LoadingSkeleton width="100%" height={80} lines={3} />
-        <LoadingSkeleton width="100%" height={80} lines={3} />
-      </ScrollView>
-    );
-  }
-
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
       contentContainerStyle={{
         paddingHorizontal: spacing.lg,
-        paddingTop: spacing.lg,
+        paddingTop: spacing.xxl,
         paddingBottom: spacing.xxl,
         gap: spacing.md,
       }}
     >
-      {conversations.length === 0 ? (
+      {/* Header */}
+      <View style={styles.header}>
+        <Text
+          style={[
+            styles.brand,
+            {
+              fontFamily: type.h2.fontFamily,
+              fontSize: type.h1.size,
+              color: colors.primary,
+            },
+          ]}
+        >
+          Flora
+        </Text>
+        <MaterialCommunityIcons
+          name="plus-circle-outline"
+          size={24}
+          color={colors.text.secondary}
+          onPress={() => router.push("/chat/new" as never)}
+          suppressHighlighting
+        />
+      </View>
+
+      {isLoading ? (
+        <View style={{ marginTop: spacing.md, gap: spacing.md }}>
+          <LoadingSkeleton width="100%" height={80} lines={3} />
+          <LoadingSkeleton width="100%" height={80} lines={3} />
+        </View>
+      ) : conversations.length === 0 ? (
         <View style={{ marginTop: spacing.xxl * 2 }}>
           <EmptyState
             illustration="flora"
@@ -311,6 +324,12 @@ export default function ChatListScreen() {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  brand: {},
   row: {
     padding: 16,
   },

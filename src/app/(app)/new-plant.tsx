@@ -52,7 +52,7 @@ export default function NewPlantScreen() {
           }
         }
 
-        router.replace("/(app)");
+        router.replace("/garden");
       } catch (error: unknown) {
         const message =
           error instanceof Error

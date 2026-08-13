@@ -3,19 +3,14 @@ import { ScrollView, Text, View, StyleSheet, Platform } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/theme";
-import { EmptyState } from "@/components/EmptyState";
-import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { Button } from "@/components/Button";
 import { Illustration } from "@/components/Illustration";
-import { PlantCard } from "@/components/PlantCard";
 import { WateringDueSection } from "@/components/WateringDueSection";
 import { NotificationPermissionBanner } from "@/components/NotificationPermissionBanner";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { fetchPlants } from "@/lib/supabase/plants";
 import { fetchDueToday } from "@/lib/supabase/watering-schedules";
 import { requestNotificationPermissions } from "@/lib/notifications";
 import { getExpoPushToken, registerPushToken } from "@/lib/supabase/push-tokens";
-import type { Plant } from "@/lib/supabase/plants";
 import type { WateringScheduleWithPlant } from "@/lib/supabase/watering-schedules";
 import { Image } from "expo-image";
 
@@ -28,11 +23,9 @@ function greetingByTime(): string {
 }
 
 export default function HomeScreen() {
-  const { user, signOut, notificationPermission, refreshNotificationPermission } = useAuth();
+  const { user, notificationPermission, refreshNotificationPermission } = useAuth();
   const { colors, spacing, type } = useTheme();
-  const [plants, setPlants] = useState<Plant[]>([]);
   const [dueToday, setDueToday] = useState<WateringScheduleWithPlant[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [showPermissionBanner, setShowPermissionBanner] = useState(false);
   const [hasCheckedPermission, setHasCheckedPermission] = useState(false);
 
@@ -40,16 +33,6 @@ export default function HomeScreen() {
   const firstName = displayName.split(" ")[0];
   const greeting = greetingByTime();
   const greeting_emojie = greeting === "Buenas noches" ? "🌑" : "☀️" ;
-
-  const loadPlants = useCallback(async () => {
-    try {
-      const data = await fetchPlants();
-      setPlants(data);
-    } catch {
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
 
   const loadDueToday = useCallback(async () => {
     try {
@@ -60,16 +43,14 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
-    loadPlants();
     loadDueToday();
-  }, [loadPlants, loadDueToday]);
+  }, [loadDueToday]);
 
   useFocusEffect(
     useCallback(() => {
-      loadPlants();
       loadDueToday();
       refreshNotificationPermission();
-    }, [loadPlants, loadDueToday, refreshNotificationPermission]),
+    }, [loadDueToday, refreshNotificationPermission]),
   );
 
   useEffect(() => {
@@ -104,8 +85,6 @@ export default function HomeScreen() {
     handleFirstTime();
   }, [notificationPermission, hasCheckedPermission, refreshNotificationPermission]);
 
-  const hasPlants = plants.length > 0;
-
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
@@ -130,15 +109,6 @@ export default function HomeScreen() {
           Brote
         </Text>
         <View style={{ flexDirection: "row", gap: spacing.md }}>
-          {hasPlants && (
-            <MaterialCommunityIcons
-              name="plus-circle-outline"
-              size={24}
-              color={colors.text.secondary}
-              onPress={() => router.push("/new-plant")}
-              suppressHighlighting
-            />
-          )}
           <MaterialCommunityIcons
             name="bell-outline"
             size={24}
@@ -190,7 +160,7 @@ export default function HomeScreen() {
         </View>
         <View style={{ marginLeft:-50, marginRight:-40, marginBottom:-50, marginTop:-30 }}>
           <Image 
-          source={require("../../../assets/images/illustrations/A handmade ceramic flower pot with natural texture.png")}
+          source={require("../../../../assets/images/illustrations/A handmade ceramic flower pot with natural texture.png")}
               style={styles.photo}
               contentFit="cover"
               transition={300}/>
@@ -198,44 +168,9 @@ export default function HomeScreen() {
       </View>
 
       {/* Due today — only visible when there are plants to water */}
-      {hasPlants && (
+      {dueToday.length > 0 && (
         <View style={{ marginTop: spacing.xl }}>
           <WateringDueSection items={dueToday} />
-        </View>
-      )}
-
-      {/* Plant list or empty state */}
-      {isLoading ? (
-        <View style={{ marginTop: spacing.xxl, gap: spacing.md }}>
-          <LoadingSkeleton width="100%" height={80} />
-          <LoadingSkeleton width="100%" height={80} />
-        </View>
-      ) : !hasPlants ? (
-        <View style={{ marginTop: spacing.xxl }}>
-          <EmptyState
-            illustration="leaf"
-            title="Aún no tienes plantas"
-            subtitle="Vamos a añadir tu primera. Cada planta tendrá su propio espacio con su historia, fotos y cuidados."
-            action={{
-              label: "Añadir mi primera planta",
-              onPress: () => router.push("/new-plant"),
-            }}
-          />
-        </View>
-      ) : (
-        <View style={{ marginTop: spacing.xl, gap: spacing.md }}>
-          {plants.map((plant) => (
-            <PlantCard
-              key={plant.id}
-              plant={plant}
-              onPress={(p) =>
-                router.push({
-                  pathname: "/plants/[id]",
-                  params: { id: p.id },
-                } as never)
-              }
-            />
-          ))}
         </View>
       )}
 
@@ -283,7 +218,7 @@ export default function HomeScreen() {
               Tu amiga experta{"\n"}en plantas 🌿
             </Text>
             <View style={{ marginTop: spacing.md }}>
-              <Button variant="primary" onPress={() => router.push("/chat" as never)}>
+              <Button variant="primary" onPress={() => router.push("/flora")}>
                 Hablar con Flora
               </Button>
             </View>
@@ -302,13 +237,6 @@ export default function HomeScreen() {
           />
         </View>
       )}
-
-      {/* Logout — subtle placement */}
-      <View style={{ marginTop: spacing.xxl, alignItems: "center" }}>
-        <Button variant="ghost" onPress={signOut}>
-          Cerrar sesión
-        </Button>
-      </View>
     </ScrollView>
   );
 }

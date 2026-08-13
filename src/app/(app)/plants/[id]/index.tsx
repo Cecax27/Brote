@@ -96,7 +96,7 @@ export default function PlantDetailScreen() {
           if (!id) return;
           try {
             await deletePlant(id);
-            router.replace("/(app)");
+            router.replace("/");
           } catch {
             Alert.alert("Error", "No se pudo eliminar la planta. Inténtalo de nuevo.");
           }
@@ -135,7 +135,7 @@ export default function PlantDetailScreen() {
           illustration="pot"
           title="Planta no encontrada"
           subtitle={error ?? "Esta planta no existe o no tienes acceso a ella."}
-          action={{ label: "Volver al inicio", onPress: () => router.replace("/(app)") }}
+          action={{ label: "Volver al inicio", onPress: () => router.replace("/") }}
         />
       </ScrollView>
     );
