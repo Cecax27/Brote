@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "brote",
+    "name": "Brote",
     "slug": "brote",
     "version": "0.0.1",
     "orientation": "portrait",
@@ -17,7 +17,9 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "pan",
+      "package": "com.bitabit.brote"
     },
     "web": {
       "output": "static",
@@ -27,19 +29,39 @@
       "expo-router",
       [
         "expo-splash-screen",
-      {
-        "backgroundColor": "#F8F6F2",
-        "image": "./assets/images/splash-icon.png",
-        "imageWidth": 76
-      }
+        {
+          "backgroundColor": "#F8F6F2",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 76
+        }
       ],
       "expo-font",
       "expo-web-browser",
-      "expo-secure-store"
+      "expo-secure-store",
+      "@react-native-community/datetimepicker",
+      [
+        "expo-notifications",
+        {
+          "enableNotificationResponseListeners": true,
+          "icon": "./assets/images/android-icon-foreground.png",
+          "color": "#ffffff",
+          "defaultChannel": "default",
+          "enableBackgroundRemoteNotifications": true
+        }
+      ]
     ],
+    "notification": {
+      "iconColor": "#6E8E6A"
+    },
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b8b598c9-101c-4ad9-851c-dc81ba676eac"
+      }
     }
   }
 }

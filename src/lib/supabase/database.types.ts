@@ -7,38 +7,78 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.5"
-  }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
+      ai_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          plant_id: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          plant_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          plant_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_conversations_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          photo_url: string | null
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          photo_url?: string | null
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          photo_url?: string | null
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       journal_entries: {
         Row: {
           content: string | null
@@ -80,10 +120,52 @@ export type Database = {
           },
         ]
       }
+      light_measurements: {
+        Row: {
+          calibrated_lux: number | null
+          created_at: string
+          device_lux: number
+          id: string
+          light_profile: string | null
+          notes: string | null
+          plant_id: string | null
+          user_id: string
+        }
+        Insert: {
+          calibrated_lux?: number | null
+          created_at?: string
+          device_lux: number
+          id?: string
+          light_profile?: string | null
+          notes?: string | null
+          plant_id?: string | null
+          user_id: string
+        }
+        Update: {
+          calibrated_lux?: number | null
+          created_at?: string
+          device_lux?: number
+          id?: string
+          light_profile?: string | null
+          notes?: string | null
+          plant_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "light_measurements_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       plants: {
         Row: {
           created_at: string
           id: string
+          light_profile: string | null
           location: string | null
           name: string
           notes: string | null
@@ -95,6 +177,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          light_profile?: string | null
           location?: string | null
           name: string
           notes?: string | null
@@ -106,6 +189,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          light_profile?: string | null
           location?: string | null
           name?: string
           notes?: string | null
@@ -116,12 +200,103 @@ export type Database = {
         }
         Relationships: []
       }
+      push_tokens: {
+        Row: {
+          created_at: string
+          id: string
+          token: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          token: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          token?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      watering_schedules: {
+        Row: {
+          active: boolean
+          created_at: string
+          frequency_days: number
+          id: string
+          last_watered_at: string | null
+          next_due_at: string
+          notify_time: string
+          plant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          frequency_days: number
+          id?: string
+          last_watered_at?: string | null
+          next_due_at: string
+          notify_time?: string
+          plant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          frequency_days?: number
+          id?: string
+          last_watered_at?: string | null
+          next_due_at?: string
+          notify_time?: string
+          plant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "watering_schedules_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      water_now: {
+        Args: { p_plant_id: string }
+        Returns: {
+          active: boolean
+          created_at: string
+          frequency_days: number
+          id: string
+          last_watered_at: string | null
+          next_due_at: string
+          notify_time: string
+          plant_id: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "watering_schedules"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       journal_entry_type:
@@ -255,9 +430,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       journal_entry_type: [

@@ -1,56 +1,71 @@
-# Welcome to your Expo app 👋
+# Brote
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A personal companion for plant care.
 
-## Get started
+## Prerequisites
 
-1. Install dependencies
+- [Node.js](https://nodejs.org/) (LTS recommended)
+- [Expo CLI](https://docs.expo.dev/more/expo-cli/)
+- For Android builds: [Android Studio](https://developer.android.com/studio) with an Android SDK
+
+## Getting Started
+
+1. Install dependencies:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. Start the development server:
 
    ```bash
-   npx expo start
+   npm start
    ```
 
-In the output, you'll find options to open the app in a
+   This opens the Expo dev server. From there you can:
+   - Press `a` to open on an Android emulator
+   - Press `i` to open on an iOS simulator
+   - Scan the QR code with Expo Go (Android/iOS)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   Alternatively, start directly on a specific platform:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+   ```bash
+   npm run android   # Android emulator
+   npm run ios       # iOS simulator
+   npm run web       # Web browser
+   ```
 
-## Get a fresh project
+## Building for Android locally
 
-When you're ready, run:
+### Development build
+
+Generates a debug APK you can install on a device or emulator:
 
 ```bash
-npm run reset-project
+npx expo run:android
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+If this is the first time, Expo will generate the native `android/` project before building.
 
-### Other setup steps
+### Preview build (via EAS Build locally)
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Produces a `.apk` ready to share with testers:
 
-## Learn more
+```bash
+npx eas build --platform android --profile preview --local
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### Production build
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npx eas build --platform android --profile production --local
+```
 
-## Join the community
+> **Note:** Make sure `ANDROID_HOME` is set and the Android SDK is installed before building.
 
-Join our community of developers creating universal apps.
+## Other Commands
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+npm run lint        # Run ESLint
+npm run gen-types   # Generate Supabase TypeScript types
+```

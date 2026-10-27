@@ -62,13 +62,13 @@ What: Each plant has a chronological logbook of care events.
 
 ### 006-watering-schedule
 What: Per-plant watering schedule with calendar view and local notifications.
-- [ ] Database migration — `watering_schedules` table (plant_id FK, frequency_days, last_watered_at, next_due_at, notify_time, active)
-- [ ] Create watering schedule per plant — frequency, reminder time, active toggle
-- [ ] Watering calendar view — upcoming waterings for the week/month
-- [ ] Local scheduled notifications via `expo-notifications` on due dates
-- [ ] "Water now" quick action — logs a watering journal entry and advances next_due_at
-- [ ] Home screen integration — "Plants that need watering today" section
-- [ ] Edit / delete / pause watering schedule
+- [x] Database migration — `watering_schedules` table (plant_id FK, frequency_days, last_watered_at, next_due_at, notify_time, active)
+- [x] Create watering schedule per plant — frequency, reminder time, active toggle
+- [x] Watering calendar view — upcoming waterings for the week/month
+- [x] Local scheduled notifications via `expo-notifications` on due dates
+- [x] "Water now" quick action — logs a watering journal entry and advances next_due_at
+- [x] Home screen integration — "Plants that need watering today" section
+- [x] Edit / delete / pause watering schedule
 
 ### 007-light-tool
 What: Measure ambient light via camera lux estimation and get placement advice.
@@ -82,24 +82,30 @@ What: Measure ambient light via camera lux estimation and get placement advice.
 
 ## V0.3 AI
 
-All AI features are backend-proxied through Supabase Edge Functions. The app never holds an AI provider key — keys live in Supabase secrets. Start with OpenAI; swap providers server-side without app updates.
+All AI features are served by the **brote-agent** — a separate Python + Gemini service deployed on Google Cloud Run. The app never holds a Gemini key; the agent owns it. The app talks to the agent over HTTP at a configurable URL (`EXPO_PUBLIC_BROTE_AGENT_URL`):
+
+- `GET /health` → `{ "status": "ok" }`
+- `POST /chat` with `{ "message": string (1–2000 chars), "plant_id"?: string }` + `Authorization: Bearer <supabase-jwt>` → `{ "reply": string }`
+- Error envelope `{ "error": { "code", "message" } }` — `UNAUTHORIZED` (401), `VALIDATION_ERROR` (422), `UPSTREAM_ERROR` (502), `INTERNAL_ERROR` (500)
+
+Conversations and messages persist on the app side in Supabase (`ai_conversations`, `ai_messages`); the agent is stateless. The agent contract is finalized: the app authenticates with the Supabase session JWT and forwards the rooted conversation's `plant_id` (omitted for a general chat) — brote-agent fetches plant context (info, journal, schedule) **server-side** as the user, so no context blob is built or cached in the bundle. `008` shipped the foundation (chat UI, persistence, Flora avatar, typed agent client) against this contract; live `/chat` wiring lands once the agent is up (mock path covers the gap until then). The `008-ai-foundation` spec pins the details.
 
 ### 008-ai-foundation
 What: AI infrastructure, Flora avatar, chat UI, and message persistence.
-- [ ] Supabase Edge Function — proxy to OpenAI API, authenticated via Supabase session
-- [ ] Database migration — `ai_conversations` table (id, user_id, plant_id?, title, created_at)
-- [ ] Database migration — `ai_messages` table (id, conversation_id, role, content, photo_url?, created_at)
-- [ ] Flora AI companion avatar — visual identity per brote-visual-guide
-- [ ] Chat UI — message bubbles, typing indicator, plant context header
-- [ ] Chat list — per-plant conversations, starting a new chat
-- [ ] Context builder — gathers plant info + recent journal entries to inject into the system prompt
-- [ ] Message persistence — save every message, resume conversations
-- [ ] Loading / empty / error states
+- [x] brote-agent client — typed wrapper at `EXPO_PUBLIC_BROTE_AGENT_URL` (`getHealth()` → `/health`, `postChat({ message, plant_id?, accessToken })` → `/chat`); typed error handling for `UNAUTHORIZED` / `VALIDATION_ERROR` / `UPSTREAM_ERROR` / `INTERNAL_ERROR` / `NETWORK`; mockable so UI ships before the agent is live
+- [x] Database migration — `ai_conversations` table (id, user_id, plant_id?, title, created_at, updated_at) + RLS + indexes + `set_updated_at` trigger
+- [x] Database migration — `ai_messages` table (id, conversation_id, role, content, photo_url?, created_at) + RLS (owner-scoped via parent conversation)
+- [x] Flora AI companion avatar — visual identity per brote-visual-guide, using illustrations in `assets/images/illustrations/Flora/`
+- [x] Chat UI — message bubbles, typing indicator, plant context header
+- [x] Chat list — per-plant conversations, starting a new chat
+- [x] Plant context — forward `plant_id` to the agent; agent fetches context server-side with the bearer JWT (no client-side context builder, no `PlantContext`)
+- [x] Message persistence — save every message, resume conversations
+- [x] Loading / empty / error states
 
 ### 009-plant-identification
-What: Identify plant species from a photo using the vision model.
+What: Identify plant species from a photo using the agent's vision model.
 - [ ] "Identify plant" action on create-plant screen and camera view
-- [ ] Vision API integration via Edge Function — send photo, receive species suggestions
+- [ ] brote-agent vision integration — send photo, receive species suggestions (new agent endpoint beyond `/health` + `/chat`; defined with the agent API)
 - [ ] Species suggestion UI — confirm suggested species or pick / type manually
 - [ ] Confidence indicator — show how confident the AI is
 - [ ] Auto-fill species + care hints on confirmation
@@ -107,8 +113,8 @@ What: Identify plant species from a photo using the vision model.
 ### 010-ai-consultation
 What: Symptom diagnosis, care advice, and general plant chat — always ending with a concrete action.
 - [ ] "Ask about this plant" button on plant detail screen
-- [ ] System prompt engineering — AI has access to plant info, journal history, past photos, light history, and watering schedule
-- [ ] Symptom analysis — user sends photo + description, AI diagnoses and recommends action
+- [ ] Context builder — assembles plant info, journal history, past photos, light history, and watering schedule to send to the agent (system prompt engineering lives server-side in brote-agent)
+- [ ] Symptom analysis — user sends photo + description, agent diagnoses and recommends an action
 - [ ] Concrete action ending — every response includes a next-step the user can take
 - [ ] V1.0 enrichment — extend context builder to include inventory items (supplies used, fertilizer references)
 
@@ -149,6 +155,13 @@ What: Per-plant health status derived from care adherence, journal patterns, and
 - [ ] Health calculation logic — watering adherence rate, time since last fertilizing / repotting, photo recency
 - [ ] Health badge on plant card and plant detail — color-coded visual indicator
 - [ ] Health tips — AI-generated suggestions when status is needs_attention or critical
+
+### 016-polish-and-refinement
+What: Polish pass — bottom tab bar, settings screen, Flora tab, and Mi jardín. No new data model.
+- [x] Bottom tab bar — `Tabs` navigator under `(app)/(tabs)` with Inicio / Mi jardín / Flora / Ajustes
+- [x] Ajustes screen — profile card, "Cerrar sesión", external links (privacy, terms, blog, GitHub, bug guide)
+- [x] Flora tab — conversation list relocated to `/flora` (threads stay at `/chat/[id]`, new chat at `/chat/new`)
+- [x] Mi jardín — full plant list + floating action button; Inicio narrowed to the watering-due summary
 
 ## Backlog / Ideas
 
